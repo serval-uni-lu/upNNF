@@ -1,0 +1,41 @@
+BootStrap: docker
+From: ubuntu:22.04
+
+%files
+    ./src /capkill/src
+    ./test /capkill/test
+    ./gen.cpp /capkill/gen.cpp
+    ./include /capkill/include
+    ./lib /capkill/lib
+    ../D4/wrapper /wrapper
+    ../D4/d4 /d4
+
+%post
+    echo "setup start"
+    apt-get -y update
+
+    #apt-get -y full-upgrade
+    apt-get -y install tzdata
+    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-program-options-dev cmake
+
+    cd /wrapper
+    make -j
+    cd /
+
+    cd /capkill
+    g++ gen.cpp -o gen
+    ./gen -DCONTAINER
+    ninja build/main
+
+    cd /d4
+    make -j
+    ls
+    echo "setup done"
+
+    chmod 755 /d4/d4
+    chmod 755 /d4
+    chmod 755 /capkill/build/main
+    chmod 755 /wrapper/wrap
+
+%runscript
+    /wrapper/wrap 64000 18000 /capkill/build/main "$@"

@@ -1,0 +1,34 @@
+BootStrap: docker
+From: ubuntu:24.04
+
+%files
+    ./src /capkill/src
+    ./test /capkill/test
+    ./gen.cpp /capkill/gen.cpp
+    ./dependencies /capkill/dependencies
+
+%post
+    echo "setup start"
+    apt-get -y update
+
+    export DEBIAN_FRONTEND=noninteractive
+    export TZ=Etc/UTC
+
+    apt-get -y install tzdata
+    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-program-options-dev cmake
+
+    cd /capkill/dependencies/networkit
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+    make -j8
+
+    cd /capkill
+    g++ gen.cpp -o gen
+    ./gen -DCONTAINER
+    ninja build/up
+
+    chmod 755 /capkill/build/up
+
+%runscript
+    /capkill/build/up "$@"
