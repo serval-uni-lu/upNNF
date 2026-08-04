@@ -1,12 +1,11 @@
 BootStrap: docker
-From: ubuntu:22.04
+From: debian:bookworm-slim
 
 %files
     ./src /capkill/src
     ./test /capkill/test
     ./gen.cpp /capkill/gen.cpp
-    ./include /capkill/include
-    ./lib /capkill/lib
+    ./dependencies /capkill/dependencies
     ../D4/wrapper /wrapper
     ../D4/d4 /d4
 
@@ -18,24 +17,33 @@ From: ubuntu:22.04
     apt-get -y install tzdata
     apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-program-options-dev cmake
 
+    cd /capkill/dependencies/networkit
+    rm -rf build
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+    make -j8
+
     cd /wrapper
+    make clean
     make -j
     cd /
 
     cd /capkill
     g++ gen.cpp -o gen
     ./gen -DCONTAINER
-    ninja build/main
+    ninja build/capkill
 
     cd /d4
+    make clean
     make -j
     ls
     echo "setup done"
 
     chmod 755 /d4/d4
     chmod 755 /d4
-    chmod 755 /capkill/build/main
+    chmod 755 /capkill/build/capkill
     chmod 755 /wrapper/wrap
 
 %runscript
-    /wrapper/wrap 64000 18000 /capkill/build/main "$@"
+    /wrapper/wrap 64000 18000 /capkill/build/capkill "$@"
