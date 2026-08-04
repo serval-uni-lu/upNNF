@@ -1,0 +1,9 @@
+networkit_add_test(auxiliary AuxGTest)
+networkit_add_test(auxiliary BucketPriorityQueueGTest)
+networkit_add_test(auxiliary SparseVectorGTest)
+networkit_add_test(auxiliary SortedListGTest)
+networkit_add_test(auxiliary SpinLockGTest)
+networkit_add_test(auxiliary LoggingTimerGTest)
+
+networkit_add_benchmark(auxiliary AuxRandomBenchmark)
+
