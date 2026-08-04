@@ -1,0 +1,82 @@
+cxx = g++
+cc = gcc
+defines =
+cxxflags = -Isrc -Wall -Wextra -Wpedantic -fopenmp -std=c++20
+ldflags = -lboost_random -lboost_program_options -lgmp -fopenmp ./dependencies/cadical-rel-2.1.3/build/libcadical.a
+cxxflagsrel = -O3
+ldflagsrel =
+cxxflagsdebug = -g
+ldflagsdebug =
+
+rule compile
+    command = $cxx -fdiagnostics-color=always $defines $cxxflags $cxxflagsrel -MMD -MF $out.d -c $in -o $out
+    description = Compiling $in
+    depfile = $out.d
+    deps = gcc
+
+rule compile_debug
+    command = $cxx -fdiagnostics-color=always $defines $cxxflags $cxxflagsdebug -MMD -MF $out.d -c $in -o $out
+    description = Compiling (DEBUG) $in
+    depfile = $out.d
+    deps = gcc
+
+rule link
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsrel
+    description = Linking $out
+
+rule link_debug
+    command = $cxx -fdiagnostics-color=always $in -o $out $ldflags $ldflagsdebug
+    description = Linking (DEBUG) $out
+
+rule clean
+    command = rm -rf build
+    description = Cleaning
+
+rule generate
+    command = $cxx -fdiagnostics-color=always gen.cpp -o gen && ./gen
+    description = Generating build.ninja
+
+rule build_test
+    command = $cxx -fdiagnostics-color=always $defines $cxxflags $in -o $out $ldflags -lboost_unit_test_framework && $out
+    description = Compiling $out
+
+build build/obj/src/cubes.cpp.o: compile src/cubes.cpp
+build build/obj/src/cubes.cpp.od: compile_debug src/cubes.cpp
+
+build build/obj/src/dnf.cpp.o: compile src/dnf.cpp
+build build/obj/src/dnf.cpp.od: compile_debug src/dnf.cpp
+build build/dnf: link build/obj/src/dnf.cpp.o build/obj/src/cubes.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/compiler.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o
+build build/dnf_debug: link_debug build/obj/src/dnf.cpp.od build/obj/src/cubes.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/compiler.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od
+
+build build/obj/src/cnf.cpp.o: compile src/cnf.cpp
+build build/obj/src/cnf.cpp.od: compile_debug src/cnf.cpp
+
+build build/obj/src/var.cpp.o: compile src/var.cpp
+build build/obj/src/var.cpp.od: compile_debug src/var.cpp
+
+build build/obj/src/compiler.cpp.o: compile src/compiler.cpp
+build build/obj/src/compiler.cpp.od: compile_debug src/compiler.cpp
+
+build build/obj/src/nnf.cpp.o: compile src/nnf.cpp
+build build/obj/src/nnf.cpp.od: compile_debug src/nnf.cpp
+
+build build/obj/src/util.cpp.o: compile src/util.cpp
+build build/obj/src/util.cpp.od: compile_debug src/util.cpp
+
+build build/test/bitset: build_test test/bitset.cpp build/obj/src/cubes.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/compiler.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o
+
+build build/test/literal: build_test test/literal.cpp build/obj/src/cubes.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/compiler.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o
+
+build build/test/clause: build_test test/clause.cpp build/obj/src/cubes.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/compiler.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o
+
+build build/test/litset: build_test test/litset.cpp build/obj/src/cubes.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/compiler.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o
+
+build build/test/variable: build_test test/variable.cpp build/obj/src/cubes.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/compiler.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o
+
+build all_release: phony build/dnf
+build all_debug: phony build/dnf_debug
+build all_test: phony build/test/bitset build/test/literal build/test/clause build/test/litset build/test/variable
+build all: phony all_release all_debug
+build clean: clean
+build generate: generate
+default all_release
