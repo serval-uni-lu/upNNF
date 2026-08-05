@@ -2,6 +2,8 @@
 #include "nnf.hpp"
 #include "pdac.hpp"
 
+#include "xoshiro.hpp"
+
 #include <fstream>
 #include <atomic>
 #include <boost/random/random_device.hpp>
@@ -48,64 +50,106 @@ PDAC pdac_from_file(std::string const& path) {
     return res;
 }
 
+/*
+ * generate a random int in [0, R - 1]
+ */
+template<typename PRNG>
+mpz_int gen_random_int(PRNG & g, mpz_int const& R) {
+    std::size_t const needed = msb(R) + 1;
+    std::size_t const n_limbs = ((needed + 63) / 64);
+
+    mpz_t result;
+    mpz_init2(result, n_limbs * 64);
+    std::vector<uint64_t> limbs(n_limbs);
+    while(true) {
+
+        for(std::size_t i = 0; i < n_limbs; i++) {
+            limbs[i] = g();
+        }
+
+        std::size_t const extra_bits = n_limbs * 64 - needed;
+        if(extra_bits > 0) {
+            limbs[n_limbs - 1] &= (uint64_t(1) << (64 - extra_bits)) - 1;
+        }
+
+        mpz_import(result, n_limbs, -1, sizeof(uint64_t), 0, 0, limbs.data());
+
+        if(mpz_cmp(result, R.backend().data()) < 0) {
+            mpz_int res(result);
+            mpz_clear(result);
+            return res;
+        }
+    }
+}
+
 void appmc(PDAC const& pdac, std::size_t const N, double const alpha, std::size_t const lN, double const epsilon, bool const verbose) {
     ANNF apnnf = ANNF(pdac.pnnf);
     apnnf.annotate_pc();
     auto const pc = apnnf.mc(ROOT);
 
-    random_device rng;
-    mt19937 mt(rng);
-    uniform_int_distribution<mpz_int> ui(1, pc);
+    std::random_device dev;
+    xoshiro512plusplus prng(dev);
+    //uniform_int_distribution<mpz_int> ui(1, pc);
 
     mpf_float rmean = 0;
     mpf_float rm = 0;
 
     std::size_t k = 0;
-    mpf_float const z = quantile(normal(), 1 - alpha / 2);
+    using boost::math::normal_distribution;
+    mpf_float const z = quantile(normal_distribution<mpf_float>(), 1 - mpf_float(alpha) / 2);
 
     std::cout << "N,Y,Yl,Yh\n";
     std::atomic<bool> done = false;
 
-    #pragma omp parallel for
-    for(std::size_t i = 0; i < N; i++) {
-        if(done.load()) {
-            continue;
+    #pragma omp parallel
+    {
+        xoshiro512plusplus lprng;
+        #pragma omp critical(init)
+        {
+            lprng = prng;
+            prng.jump();
         }
 
-        std::set<Literal> path;
-        ANNF aunnf = ANNF(pdac.unnf);
-        auto l = ui(mt);
+        while(! done.load()) {
+            std::set<Literal> path;
+            ANNF aunnf = ANNF(pdac.unnf);
+            auto const l = gen_random_int(lprng, pc) + 1;
 
-        path.clear();
-        apnnf.get_path(l, path);
-        aunnf.set_assumps(path);
-        aunnf.annotate_mc();
-        auto const ai = aunnf.mc(ROOT) * pc;
+            path.clear();
+            apnnf.get_path(l, path);
+            aunnf.set_assumps(path);
+            aunnf.annotate_mc();
+            auto const ai = aunnf.mc(ROOT) * pc;
 
-        #pragma omp critical
-        {
-            k++;
-            mpf_float n_mean = rmean + ((ai - rmean) / k);
-            rm = rm + ((ai - rmean) * (ai - n_mean));
-            rmean = n_mean;
+            #pragma omp critical
+            {
+                k++;
+                mpf_float n_mean = rmean + ((ai - rmean) / k);
+                rm = rm + ((ai - rmean) * (ai - n_mean));
+                rmean = n_mean;
 
-            if(k > 1) {
-                mpf_float S2 = rm / (k - 1);
-                mpf_float sd = sqrt(S2) / sqrt(k);
+                if(k > 1) {
+                    mpf_float S2 = rm / (k - 1);
+                    mpf_float sd = sqrt(S2) / sqrt(k);
 
-                auto yl = rmean - z * sd;
-                auto yh = rmean + z * sd;
+                    auto yl = rmean - z * sd;
+                    auto yh = rmean + z * sd;
 
-                if(verbose || k >= N) {
-                    std::cout << k << ", " << rmean << ", " << yl << ", " << yh << "\n";
-                }
-
-                if(lN > 0 && k >= lN && rmean / epsilon <= yl && rmean * epsilon >= yh) {
-                    done.store(true);
-
-                    if(!verbose) {
+                    if(verbose || k == N) {
                         std::cout << k << ", " << rmean << ", " << yl << ", " << yh << "\n";
                     }
+
+                    if(lN > 0 && k >= lN && rmean / epsilon <= yl && rmean * epsilon >= yh) {
+                        done.store(true);
+
+                        if(!verbose) {
+                            std::cout << k << ", " << rmean << ", " << yl << ", " << yh << "\n";
+                        }
+                    }
+                }
+
+                if(k >= N) {
+                    done.store(true);
                 }
             }
         }

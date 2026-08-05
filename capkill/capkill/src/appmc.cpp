@@ -56,8 +56,6 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
 
         std::size_t nb_tries = 0;
         std::size_t nb_success = 0;
-        mpf_float rmean = 0;
-        mpf_float rm = 0;
 
         using boost::math::normal_distribution;
         mpf_float const z = quantile(normal_distribution<mpf_float>(), 1 - mpf_float(alpha) / 2);

@@ -203,6 +203,7 @@ int main(void) {
     prj.add_compile_option("-Wextra");
     prj.add_compile_option("-Wpedantic");
     prj.add_compile_option("-fopenmp");
+    prj.add_compile_option("-std=c++20");
 
     prj.add_realease_compile_option("-O3");
 

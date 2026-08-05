@@ -1,6 +1,6 @@
 cxx = g++
 cc = gcc
-cxxflags = -Wall -Wextra -Wpedantic -fopenmp
+cxxflags = -Wall -Wextra -Wpedantic -fopenmp -std=c++20
 ldflags = -lboost_random -lboost_program_options -lgmp -fopenmp
 cxxflagsrel = -O3
 ldflagsrel =
