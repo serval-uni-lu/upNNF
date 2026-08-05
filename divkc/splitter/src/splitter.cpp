@@ -176,11 +176,14 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        std::cout << "c p show";
+        std::ofstream out(path + ".proj");
+
+        out << "c p show";
         for(auto const& v : vprj) {
-            std::cout << " " << v;
+            out << " " << v;
         }
-        std::cout << " 0\n";
+        out << " 0\n";
+        out << cnf;
 #endif
 
 #ifdef CIG
