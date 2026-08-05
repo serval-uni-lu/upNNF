@@ -282,6 +282,7 @@ int main(int argc, char** argv) {
     prj.set_main_property("src/up.cpp");
     prj.set_main_property("src/smp.cpp");
     prj.set_main_property("src/sampler.cpp");
+    prj.set_main_property("src/appmc.cpp");
 
     prj.gen_makefile();
     

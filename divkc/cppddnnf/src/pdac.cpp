@@ -61,7 +61,7 @@ void appmc(PDAC const& pdac, std::size_t const N, double const alpha, std::size_
     mpf_float rm = 0;
 
     std::size_t k = 0;
-    mpf_float const z = quantile(normal(), 1 - alpha);
+    mpf_float const z = quantile(normal(), 1 - alpha / 2);
 
     std::cout << "N,Y,Yl,Yh\n";
     std::atomic<bool> done = false;

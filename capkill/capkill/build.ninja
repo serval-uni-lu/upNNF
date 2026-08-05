@@ -66,6 +66,11 @@ build build/obj/src/util.cpp.od: compile_debug src/util.cpp
 build build/obj/src/ordering.cpp.o: compile src/ordering.cpp
 build build/obj/src/ordering.cpp.od: compile_debug src/ordering.cpp
 
+build build/obj/src/appmc.cpp.o: compile src/appmc.cpp
+build build/obj/src/appmc.cpp.od: compile_debug src/appmc.cpp
+build build/appmc: link build/obj/src/appmc.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
+build build/appmc_debug: link_debug build/obj/src/appmc.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od
+
 build build/obj/src/graph.cpp.o: compile src/graph.cpp
 build build/obj/src/graph.cpp.od: compile_debug src/graph.cpp
 
@@ -84,8 +89,8 @@ build build/test/litset: build_test test/litset.cpp build/obj/src/cnf.cpp.o buil
 
 build build/test/variable: build_test test/variable.cpp build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
 
-build all_release: phony build/sampler build/smp build/capkill build/up
-build all_debug: phony build/sampler_debug build/smp_debug build/capkill_debug build/up_debug
+build all_release: phony build/sampler build/smp build/capkill build/appmc build/up
+build all_debug: phony build/sampler_debug build/smp_debug build/capkill_debug build/appmc_debug build/up_debug
 build all_test: phony build/test/bitset build/test/literal build/test/clause build/test/litset build/test/variable
 build all: phony all_release all_debug
 build clean: clean
