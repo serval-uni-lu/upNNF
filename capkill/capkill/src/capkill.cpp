@@ -35,7 +35,7 @@ RunRes test(std::string const& cnf_path, CNF & cnf, std::vector<std::size_t> con
         cnf.set_active(clids[j], true);
     }
 
-    for(std::size_t i = low + step; i <= high && paths.size() < N; i += step) {
+    for(std::size_t i = low + step; i < high && paths.size() < N; i += step) {
         for(std::size_t j = i - step; j <= i; j++) {
             cnf.set_active(clids[j], true);
         }
@@ -100,9 +100,6 @@ RunRes test(std::string const& cnf_path, CNF & cnf, std::vector<std::size_t> con
                     high = nbcls[i + 1];
                 }
 
-                if(low + 1 == high) {
-                    high = low;
-                }
                 cont = false;
                 std::cout << " s:\"" << res[i].output << "\"";
                 break;
@@ -110,11 +107,6 @@ RunRes test(std::string const& cnf_path, CNF & cnf, std::vector<std::size_t> con
             case RunStatus::Time:
                 high = nbcls[i];
                 rr = res[i];
-
-                if(low + 1 == high) {
-                    high = low;
-                    cont = false;
-                }
                 break;
         }
 
@@ -155,13 +147,13 @@ void run(std::string const& cnf_path, std::size_t const mem, std::size_t const t
     }
 
     std::size_t low = ilow;
-    std::size_t high = clids.size() - 1;
-    if(ihigh > 0 && ihigh < (clids.size() - 1)) {
+    std::size_t high = clids.size();
+    if(ihigh > 0 && ihigh < clids.size()) {
         high = ihigh;
     }
     std::size_t nb = 0;
     RunRes rr;
-    while(low < high) {
+    while(low + 1 < high) {
         std::cout << "low: " << low << " -- high: " << high << "\n";
         RunRes lrr = test(cnf_path, cnf, clids, low, high, nthreads, mem, time);
         if(rr.input != lrr.input && lrr.status == RunStatus::Done) {
