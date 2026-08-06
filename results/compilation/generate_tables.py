@@ -13,6 +13,8 @@ divkc = pd.read_csv("csv/divkc.csv", skipinitialspace = True, index_col = 'file'
 d4 = pd.read_csv("csv/d4.ddnnf.csv", skipinitialspace = True, index_col = 'file')
 total = pd.read_csv("csv/total.csv", skipinitialspace = True)
 cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
+ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file')
+
 
 # mc.dropna(inplace = True)
 # divkc.dropna(inplace = True)
@@ -22,6 +24,8 @@ cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
 # d.dropna(inplace = True)
 
 divkc["ok"] = (divkc.splitter_status == "done") & (divkc.proj_status == "done") & (divkc.pd4_status == "done") & (divkc.ud4_status == "done") & (divkc.appmc_status == "done")
+ck["ck_ok"] = (ck.ck_status == "done") & (ck.ck_d4_status == "done") & (ck.ck_s_status == "done")
+ck["d4d_ok"] = (ck.d4d_status == "done") & (ck.d4d_s_status == "done")
 
 print(r"""\documentclass{article}
 
@@ -135,8 +139,8 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-    \begin{tabular}{l|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour} \land \neg \text{DivKC}$ & \#$\neg \text{\dfour}$ & \#$\text{DivKC} \land \neg \text{\dfour}$ \\ 
+    \begin{tabular}{l|c|c|c|c|c|c}
+        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$+\text{\dfour}_\textit{ld}$ & \#$+\textit{CK}$ & \#$+\textit{DivKC}$ \\ 
         \hline""")
 
 
@@ -147,20 +151,33 @@ for x in total.index:
 
     ld4 = d4[d4.index.str.contains(sub)]
     ldivkc = divkc[divkc.index.str.contains(sub)]
+    lck = ck[ck.index.str.contains(sub)]
 
     ld4 = ld4[ld4.status == "done"]
     ldivkc = ldivkc[ldivkc.ok]
+    lck = lck[lck.ck_ok]
+    ld4d = lck[lck.d4d_ok]
 
     sd4 = set(ld4.index)
     sdivkc = set(ldivkc.index)
+    sck = set(lck.index)
+    sd4d = set(ld4d.index)
+
+    not_d4 = nbf - len(sd4)
+    onlyd4 = len(sd4 - sdivkc - sck - sd4d)
+    addd4d = len(sd4d - sd4)
+    addck = len(sck - sd4d - sd4)
+    adddivkc = len(sdivkc - sck - sd4d - sd4)
 
     k = len(sdivkc - sd4)
-    onlyd4 = len(sd4 - sdivkc)
+    onlyd4d = len(((sd4d - sck) - sdivkc) - sd4)
+    onlydivkc = len(sdivkc - sd4 - sck - sd4d)
 
     if k > 0:
         k = "\\textbf{" + str(k) + "}"
 
-    print(f"{vsub} & {nbf} & {onlyd4} & {nbf - len(sd4)} & {k} \\\\")
+    # print(f"{vsub} & {nbf} & {onlyd4} & {nbf - len(sd4)} & {k} \\\\")
+    print(f"{vsub} & {nbf} & {onlyd4} & {not_d4} & {addd4d} & {addck} & {adddivkc} \\\\")
 
 print(r"""    \end{tabular}
         \caption{Experimental results regarding the scalability of Algorithm~\ref{divkc:alg:main}.
