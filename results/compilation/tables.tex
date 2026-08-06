@@ -1,0 +1,161 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{balance}
+\usepackage{hyperref}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{xspace}
+\usepackage{framed}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\renewcommand{\algorithmiccomment}[1]{\hfill // #1}
+\usepackage{graphics}
+\usepackage{url}
+\usepackage{longtable}
+\usepackage{tikz}
+
+\usepackage{adjustbox}
+\usepackage{subcaption}
+\usepackage{bbm}
+\usepackage{amsmath, amsfonts, amssymb, commath}
+
+\newcommand\unigen[0]{UniGen3\xspace}
+\newcommand\unigenone[0]{UniGen\xspace}
+\newcommand\unigentwo[0]{UniGen2\xspace}
+\newcommand\spur[0]{SPUR\xspace}
+\newcommand\kus[0]{KUS\xspace}
+\newcommand\smarch[0]{Smarch\xspace}
+\newcommand\sts[0]{STS\xspace}
+\newcommand\bddsampler[0]{BDDSampler\xspace}
+\newcommand\quicksampler[0]{QuickSampler\xspace}
+\newcommand\cmsgen[0]{CMSGen\xspace}
+
+\newcommand\z[0]{Z3\xspace}
+\newcommand\minisat[0]{MiniSAT\xspace}
+\newcommand\cms[0]{CryptoMiniSAT\xspace}
+
+\newcommand\mctw[0]{McTW\xspace}
+\newcommand\dfour[0]{D4\xspace}
+\newcommand\dmc[0]{DMC\xspace}
+\newcommand\ctod[0]{C2D\xspace}
+\newcommand\dsharp[0]{DSharp\xspace}
+\newcommand\sharpsat[0]{sharpSAT\xspace}
+\newcommand\ganak[0]{GANAK\xspace}
+
+\newcommand\approxmc[0]{ApproxMC\xspace}
+\newcommand\approxcount[0]{ApproxCount\xspace}
+\newcommand\samplecount[0]{SampleCount\xspace}
+
+\newcommand\barbarik[0]{Barbarik\xspace}
+
+\newcommand\ksk[0]{{\textit k}\xspace}
+\newcommand\kss[0]{{\textit s}\xspace}
+\newcommand\kst[0]{{\textit t}\xspace}
+\newcommand\tw[0]{{\textit tw}\xspace}
+\newcommand\deff[0]{$\delta$\xspace}
+\newcommand\edeff[0]{$\delta'$\xspace}
+
+\newcommand\nmis[0]{\#{\textit MIS}\xspace}
+\newcommand\neqc[0]{\#{\textit eqv}\xspace}
+
+\newcommand\var{\textit{Var}}
+\newcommand\forget{\textit{Forget}}
+\newcommand\project{\textit{Project}}
+\newcommand{\condition}[2]{\ensuremath{#1 \vert_{#2}}}
+\newcommand\F{\textit{false}}
+\newcommand\T{\textit{true}}
+\DeclareMathOperator{\EX}{\mathbb{E}}
+
+\begin{document}
+
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#$F_\textit{total}$ & min($|\var(F)|$) & max($|\var(F)|$) & min($|F|$) & max($|F|$) \\
+            \hline
+
+Global & 4550 & 0 & 8286433 & 0 & 7689680 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1948 & 5 & 229100 & 10 & 399794 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1823 & 2 & 8286433 & 1 & 7689680 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 501 & 14 & 486193 & 31 & 2598178 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 0 & 31012 & 0 & 350120 \\
+            \end{tabular}
+            % \end{adjustbox}
+            \caption{Dataset summary.
+		The first column indicates the dataset, and the \#F column indicates how many formulae the dataset contains.
+		The following columns indicate the minimum and maximum number of variables (resp. clauses) in the dataset.}
+	\label{divkc:tab:datasets}
+\end{table}
+\begin{table}[h!]
+	\centering
+    \begin{tabular}{l|c|c|c|c}
+        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour} \land \neg \text{DivKC}$ & \#$\neg \text{\dfour}$ & \#$\text{DivKC} \land \neg \text{\dfour}$ \\ 
+        \hline
+Global & 4550 & 237 & 670 & \textbf{114} \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1948 & 58 & 213 & \textbf{52} \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1823 & 136 & 393 & \textbf{58} \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 501 & 39 & 61 & \textbf{4} \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 4 & 3 & 0 \\
+    \end{tabular}
+        \caption{Experimental results regarding the scalability of Algorithm~\ref{divkc:alg:main}.
+		Column \#$F_\textit{total}$ indicates the total number of formulae in each dataset.
+		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by Algorithm~\ref{divkc:alg:main}.
+        Column \#$\neg\text{\dfour}$ shows the number of formulae not compiled by \dfour.
+        The last column indicates the number of formulae that were only compiled by Algorithm~\ref{divkc:alg:main}, but not by \dfour.
+	}
+	\label{divkc:tab:gen}
+\end{table}
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage & $|R_{G_P}| \leq |R_F| \leq |R_{G_U}|$ \\
+            \hline
+Global & 3670 & 0.969 & 0.857 & 0.826 & 1.000 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1689 & 0.969 & 0.895 & 0.864 & 1.000 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1307 & 0.969 & 0.906 & 0.875 & 1.000 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 403 & 0.968 & 0.789 & 0.757 & 1.000 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 271 & 0.967 & 0.487 & 0.454 & 1.000 \\
+        \end{tabular}
+    % \end{adjustbox}
+    \caption{Experimental results for Algorithm~\ref{divkc:alg:appmc}.
+		Column \#F indicates with how many formulae the statistics have been computed.
+        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by Algorithm~\ref{divkc:alg:appmc} is correct (i.e., smaller than the true model count of $F$).
+		% Similarly, column $Y_h \geq |R_F|$ indicates how often the upper bound is correct.
+		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
+        % The last column confirms the correctness of the bounds obtained using Lemma~\ref{divkc:lem:ebounds}.
+	}
+	\label{divkc:tab:appmc}
+\end{table}
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c|c}
+			Dataset & \#F & $Y_l \geq |R_{G_P}|$ & $Y_h \leq |R_{G_U}|$ & Both & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
+            \hline 
+Global & 3669 & 0.807 & 0.836 & 0.721 & 4.17e-9 & 0.54 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1689 & 0.844 & 0.869 & 0.760 & 1.8e-9 & 0.54 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1307 & 0.920 & 0.893 & 0.834 & 1.75e-7 & 0.0962 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 403 & 0.697 & 0.769 & 0.610 & 1.64e-13 & 0.0153 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.196 & 0.448 & 0.093 & 1.69e-13 & 0.281 \\
+            \end{tabular}
+            % \end{adjustbox}
+            \caption{Experimental results comparing the bounds obtained with Algorithm~\ref{divkc:alg:appmc} and with Lemma~\ref{divkc:lem:ebounds}.
+	Column \#F indicates with how many formulae the statistics have been computed.
+	% Column $Y_l \geq |R_{G_P}|$ indicates how often the lower bound returned by Algorithm~\ref{divkc:alg:appmc} is correct and larger than the lower bound obtained by using Lemma~\ref{divkc:lem:ebounds}.
+	% Similarly, column $Y_h \leq |R_{G_U}|$ indicates how often the upper bound returned by Algorithm~\ref{divkc:alg:appmc} is correct and better than the upper bound obtained by using Lemma~\ref{divkc:lem:ebounds}.
+	The 'Both' column indicates how often we have $Y_l \geq |R_{G_P}| \land Y_l \leq |R_F|$
+    and $Y_h \leq |R_{G_U}| \land Y_h \geq |R_F|$.
+	The last two columns represent the observed median and maximum values of the ratio $r_c = \frac{\textit{min}(Y_h, |R_{G_U}|) - \textit{max}(Y_l, |R_{G_P}|)}{|R_{G_U}| - |R_{G_P}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
+	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{divkc:tab:appmc}.
+	}
+	\label{divkc:tab:coverage}
+\end{table}
+
+\end{document}
+
