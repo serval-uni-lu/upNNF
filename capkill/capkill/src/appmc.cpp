@@ -41,6 +41,8 @@ po::options_description get_program_options() {
 
 template<typename RAG>
 int setup_runner(po::variables_map const& vm, RAG & rag) {
+    int return_code = 0;
+
     try {
         std::size_t const N = vm["nb"].as<std::size_t>();
         double const alpha = vm["alpha"].as<double>();
@@ -63,8 +65,6 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
         std::cout << "N,Y,Yl,Yh\n";
         std::atomic<bool> done = false;
 
-        int return_code = 0;
-
         #pragma omp parallel
         {
             xoshiro512plusplus lprng;
@@ -85,8 +85,10 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
                     }
 
                     if(nb_tries > 1) {
-                        mpf_float sigma = 0.5;
-                        sigma *= 0.5;
+                        //mpf_float sigma = 0.5;
+                        //sigma *= 0.5;
+                        mpf_float sigma = nb_tries * nb_success - nb_success * nb_success;
+                        sigma /= nb_tries * nb_tries;
                         sigma /= nb_tries;
                         sigma = boost::multiprecision::sqrt(sigma);
 
@@ -97,7 +99,7 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
                         auto yl = estimate - z * sigma * rag.get_mc();
                         auto yh = estimate + z * sigma * rag.get_mc();
 
-                        if(verbose || nb_tries == N) {
+                        if((verbose || nb_tries == N) && nb_success != 0) {
                             std::cout << nb_tries << ", " << estimate << ", " << yl << ", " << yh << "\n";
                         }
 
@@ -107,14 +109,13 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
                             if(!verbose && nb_success != 0) {
                                 std::cout << nb_tries << ", " << estimate << ", " << yl << ", " << yh << "\n";
                             }
-
-                            if(nb_success == 0) {
-                                return_code = 1;
-                            }
                         }
 
                         if(nb_tries >= N) {
                             done.store(true);
+                            if(nb_success == 0) {
+                                return_code = 1;
+                            }
                         }
                     }
                 }

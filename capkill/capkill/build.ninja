@@ -36,62 +36,62 @@ rule build_test
     command = $cxx -fdiagnostics-color=always $defines $cxxflags $in -o $out $ldflags -lboost_unit_test_framework && $out
     description = Compiling $out
 
+build build/obj/src/capkill.cpp.o: compile src/capkill.cpp
+build build/obj/src/capkill.cpp.od: compile_debug src/capkill.cpp
+build build/capkill: link build/obj/src/capkill.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
+build build/capkill_debug: link_debug build/obj/src/capkill.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
+
+build build/obj/src/up.cpp.o: compile src/up.cpp
+build build/obj/src/up.cpp.od: compile_debug src/up.cpp
+build build/up: link build/obj/src/up.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
+build build/up_debug: link_debug build/obj/src/up.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
+
+build build/obj/src/appmc.cpp.o: compile src/appmc.cpp
+build build/obj/src/appmc.cpp.od: compile_debug src/appmc.cpp
+build build/appmc: link build/obj/src/appmc.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
+build build/appmc_debug: link_debug build/obj/src/appmc.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
+
 build build/obj/src/sampler.cpp.o: compile src/sampler.cpp
 build build/obj/src/sampler.cpp.od: compile_debug src/sampler.cpp
-build build/sampler: link build/obj/src/sampler.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
-build build/sampler_debug: link_debug build/obj/src/sampler.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od
+build build/sampler: link build/obj/src/sampler.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
+build build/sampler_debug: link_debug build/obj/src/sampler.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
 
 build build/obj/src/cnf.cpp.o: compile src/cnf.cpp
 build build/obj/src/cnf.cpp.od: compile_debug src/cnf.cpp
 
-build build/obj/src/var.cpp.o: compile src/var.cpp
-build build/obj/src/var.cpp.od: compile_debug src/var.cpp
-
-build build/obj/src/smp.cpp.o: compile src/smp.cpp
-build build/obj/src/smp.cpp.od: compile_debug src/smp.cpp
-build build/smp: link build/obj/src/smp.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
-build build/smp_debug: link_debug build/obj/src/smp.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od
-
-build build/obj/src/capkill.cpp.o: compile src/capkill.cpp
-build build/obj/src/capkill.cpp.od: compile_debug src/capkill.cpp
-build build/capkill: link build/obj/src/capkill.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
-build build/capkill_debug: link_debug build/obj/src/capkill.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od
+build build/obj/src/util.cpp.o: compile src/util.cpp
+build build/obj/src/util.cpp.od: compile_debug src/util.cpp
 
 build build/obj/src/nnf.cpp.o: compile src/nnf.cpp
 build build/obj/src/nnf.cpp.od: compile_debug src/nnf.cpp
 
-build build/obj/src/util.cpp.o: compile src/util.cpp
-build build/obj/src/util.cpp.od: compile_debug src/util.cpp
+build build/obj/src/smp.cpp.o: compile src/smp.cpp
+build build/obj/src/smp.cpp.od: compile_debug src/smp.cpp
+build build/smp: link build/obj/src/smp.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
+build build/smp_debug: link_debug build/obj/src/smp.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
 
 build build/obj/src/ordering.cpp.o: compile src/ordering.cpp
 build build/obj/src/ordering.cpp.od: compile_debug src/ordering.cpp
 
-build build/obj/src/appmc.cpp.o: compile src/appmc.cpp
-build build/obj/src/appmc.cpp.od: compile_debug src/appmc.cpp
-build build/appmc: link build/obj/src/appmc.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
-build build/appmc_debug: link_debug build/obj/src/appmc.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od
-
 build build/obj/src/graph.cpp.o: compile src/graph.cpp
 build build/obj/src/graph.cpp.od: compile_debug src/graph.cpp
 
-build build/obj/src/up.cpp.o: compile src/up.cpp
-build build/obj/src/up.cpp.od: compile_debug src/up.cpp
-build build/up: link build/obj/src/up.cpp.o build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
-build build/up_debug: link_debug build/obj/src/up.cpp.od build/obj/src/cnf.cpp.od build/obj/src/var.cpp.od build/obj/src/nnf.cpp.od build/obj/src/util.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od
+build build/obj/src/var.cpp.o: compile src/var.cpp
+build build/obj/src/var.cpp.od: compile_debug src/var.cpp
 
-build build/test/bitset: build_test test/bitset.cpp build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
+build build/test/literal: build_test test/literal.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
-build build/test/literal: build_test test/literal.cpp build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
+build build/test/variable: build_test test/variable.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
-build build/test/clause: build_test test/clause.cpp build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
+build build/test/litset: build_test test/litset.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
-build build/test/litset: build_test test/litset.cpp build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
+build build/test/bitset: build_test test/bitset.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
-build build/test/variable: build_test test/variable.cpp build/obj/src/cnf.cpp.o build/obj/src/var.cpp.o build/obj/src/nnf.cpp.o build/obj/src/util.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o
+build build/test/clause: build_test test/clause.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
-build all_release: phony build/sampler build/smp build/capkill build/appmc build/up
-build all_debug: phony build/sampler_debug build/smp_debug build/capkill_debug build/appmc_debug build/up_debug
-build all_test: phony build/test/bitset build/test/literal build/test/clause build/test/litset build/test/variable
+build all_release: phony build/capkill build/up build/appmc build/sampler build/smp
+build all_debug: phony build/capkill_debug build/up_debug build/appmc_debug build/sampler_debug build/smp_debug
+build all_test: phony build/test/literal build/test/variable build/test/litset build/test/bitset build/test/clause
 build all: phony all_release all_debug
 build clean: clean
 build generate: generate
