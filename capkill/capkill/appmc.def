@@ -1,0 +1,49 @@
+BootStrap: docker
+From: debian:bookworm-slim
+
+%files
+    ./src /capkill/src
+    ./test /capkill/test
+    ./gen.cpp /capkill/gen.cpp
+    ./dependencies /capkill/dependencies
+    ../D4/wrapper /wrapper
+    # ../D4/d4 /d4
+
+%post
+    echo "setup start"
+    apt-get -y update
+
+    #apt-get -y full-upgrade
+    apt-get -y install tzdata
+    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-program-options-dev cmake
+
+    cd /capkill/dependencies/networkit
+    rm -rf build
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
+    make -j4
+
+    cd /wrapper
+    make clean
+    make -j
+    cd /
+
+    cd /capkill
+    g++ gen.cpp -o gen
+    ./gen -DCONTAINER
+    ninja build/appmc
+
+    # cd /d4
+    # make clean
+    # make -j
+    ls
+    echo "setup done"
+
+    # chmod 755 /d4/d4
+    # chmod 755 /d4
+    chmod 755 /capkill/build/appmc
+    chmod 755 /wrapper/wrap
+
+%runscript
+    /wrapper/wrap 64000 18000 /capkill/build/appmc "$@"
