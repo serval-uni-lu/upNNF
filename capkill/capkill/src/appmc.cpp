@@ -63,6 +63,8 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
         std::cout << "N,Y,Yl,Yh\n";
         std::atomic<bool> done = false;
 
+        int return_code = 0;
+
         #pragma omp parallel
         {
             xoshiro512plusplus lprng;
@@ -102,8 +104,12 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
                         if(nb_success > 0 && lN > 0 && nb_tries >= lN && estimate / epsilon <= yl && estimate * epsilon >= yh) {
                             done.store(true);
 
-                            if(!verbose) {
+                            if(!verbose && nb_success != 0) {
                                 std::cout << nb_tries << ", " << estimate << ", " << yl << ", " << yh << "\n";
+                            }
+
+                            if(nb_success == 0) {
+                                return_code = 1;
                             }
                         }
 
@@ -119,7 +125,7 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
         std::cerr << "EXCEPTION ERROR: " << e.what() << "\n";
         return 1;
     }
-    return 0;
+    return return_code;
 }
 
 int main(int argc, char** argv) {
