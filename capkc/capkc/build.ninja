@@ -1,6 +1,6 @@
 cxx = g++
 cc = gcc
-defines =
+defines = -DD4_PATH=\"/home/oz/.local/bin/d4\"
 cxxflags = -Wall -Wextra -Wpedantic -fopenmp -Idependencies/networkit/include -Idependencies/networkit/extlibs/tlx -std=c++20 -Isrc
 ldflags = -lboost_random -lboost_program_options -lgmp ./dependencies/networkit/build/libnetworkit.a -fopenmp
 cxxflagsrel = -O3
@@ -35,11 +35,6 @@ rule generate
 rule build_test
     command = $cxx -fdiagnostics-color=always $defines $cxxflags $in -o $out $ldflags -lboost_unit_test_framework && $out
     description = Compiling $out
-
-build build/obj/src/capkill.cpp.o: compile src/capkill.cpp
-build build/obj/src/capkill.cpp.od: compile_debug src/capkill.cpp
-build build/capkill: link build/obj/src/capkill.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
-build build/capkill_debug: link_debug build/obj/src/capkill.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
 
 build build/obj/src/up.cpp.o: compile src/up.cpp
 build build/obj/src/up.cpp.od: compile_debug src/up.cpp
@@ -79,6 +74,11 @@ build build/obj/src/graph.cpp.od: compile_debug src/graph.cpp
 build build/obj/src/var.cpp.o: compile src/var.cpp
 build build/obj/src/var.cpp.od: compile_debug src/var.cpp
 
+build build/obj/src/capkc.cpp.o: compile src/capkc.cpp
+build build/obj/src/capkc.cpp.od: compile_debug src/capkc.cpp
+build build/capkc: link build/obj/src/capkc.cpp.o build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
+build build/capkc_debug: link_debug build/obj/src/capkc.cpp.od build/obj/src/cnf.cpp.od build/obj/src/util.cpp.od build/obj/src/nnf.cpp.od build/obj/src/ordering.cpp.od build/obj/src/graph.cpp.od build/obj/src/var.cpp.od
+
 build build/test/literal: build_test test/literal.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
 build build/test/variable: build_test test/variable.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
@@ -89,8 +89,8 @@ build build/test/bitset: build_test test/bitset.cpp build/obj/src/cnf.cpp.o buil
 
 build build/test/clause: build_test test/clause.cpp build/obj/src/cnf.cpp.o build/obj/src/util.cpp.o build/obj/src/nnf.cpp.o build/obj/src/ordering.cpp.o build/obj/src/graph.cpp.o build/obj/src/var.cpp.o
 
-build all_release: phony build/capkill build/up build/appmc build/sampler build/smp
-build all_debug: phony build/capkill_debug build/up_debug build/appmc_debug build/sampler_debug build/smp_debug
+build all_release: phony build/up build/appmc build/sampler build/smp build/capkc
+build all_debug: phony build/up_debug build/appmc_debug build/sampler_debug build/smp_debug build/capkc_debug
 build all_test: phony build/test/literal build/test/variable build/test/litset build/test/bitset build/test/clause
 build all: phony all_release all_debug
 build clean: clean

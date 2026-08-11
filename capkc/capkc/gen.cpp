@@ -278,7 +278,7 @@ int main(int argc, char** argv) {
     prj.add_source_folder("src", {".cpp"});
     prj.add_test_folder("test", {".cpp"});
 
-    prj.set_main_property("src/capkill.cpp");
+    prj.set_main_property("src/capkc.cpp");
     prj.set_main_property("src/up.cpp");
     prj.set_main_property("src/smp.cpp");
     prj.set_main_property("src/sampler.cpp");

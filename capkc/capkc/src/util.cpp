@@ -11,10 +11,14 @@
 
 #include "util.hpp"
 
-#ifdef CONTAINER
+//#ifdef CONTAINER
+//#define D4_PATH "/d4/d4"
+//#else
+//#define D4_PATH "/home/oz/.local/bin/d4"
+//#endif
+
+#ifndef D4_PATH
 #define D4_PATH "/d4/d4"
-#else
-#define D4_PATH "/home/oz/.local/bin/d4"
 #endif
 
 char const* get_d4_path() {

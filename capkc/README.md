@@ -27,7 +27,7 @@ by following the instructions in the respective folders.
 
 The dependencies on Debian-based systems can be installed as follows:
 ```
-apt install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-program-options-dev libboost-random-dev cmake
+apt install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-program-options-dev libboost-random-dev cmake python3-dev
 ```
 
 ### Building
@@ -44,10 +44,10 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
 make -j4
-cd ../../
+cd ../../../
 
 g++ gen.cpp -o gen
-./gen
+./gen -DD4_PATH=\\\""$HOME/.local/bin/d4"\\\"
 ninja clean
 ninja
 cd ..
@@ -56,4 +56,28 @@ cd D4/d4
 make clean
 make -j
 cd ../..
+
+cd D4/wrapper
+make clean
+make -j
+cd ../..
+```
+
+Given that compilation can require large amounts of memory, an apptainer script
+is proposed in the `D4` directory. The container will limit `D4` to 64 GB of memory and
+five hours of computation.
+
+```
+apptainer build --fakeroot d4.sif d4.def
+```
+
+The resulting container (`d4.sif`) can be used just like the native executable.
+
+### Example Usage
+
+Suppose we would like to compile a formula named `t.cnf`.
+We begin by calling the search algorithm:
+
+```
+./capkc/build/capkc --cnf t.cnf
 ```

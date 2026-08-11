@@ -2,10 +2,10 @@ BootStrap: docker
 From: debian:bookworm-slim
 
 %files
-    ./src /capkill/src
-    ./test /capkill/test
-    ./gen.cpp /capkill/gen.cpp
-    ./dependencies /capkill/dependencies
+    ./src /capkc/src
+    ./test /capkc/test
+    ./gen.cpp /capkc/gen.cpp
+    ./dependencies /capkc/dependencies
     ../D4/wrapper /wrapper
     # ../D4/d4 /d4
 
@@ -15,9 +15,9 @@ From: debian:bookworm-slim
 
     #apt-get -y full-upgrade
     apt-get -y install tzdata
-    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-random-dev libboost-program-options-dev cmake
+    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-random-dev libboost-program-options-dev cmake python3-dev
 
-    cd /capkill/dependencies/networkit
+    cd /capkc/dependencies/networkit
     rm -rf build
     mkdir build
     cd build
@@ -29,7 +29,7 @@ From: debian:bookworm-slim
     make -j
     cd /
 
-    cd /capkill
+    cd /capkc
     g++ gen.cpp -o gen
     ./gen -DCONTAINER
     ninja build/appmc
@@ -42,8 +42,8 @@ From: debian:bookworm-slim
 
     # chmod 755 /d4/d4
     # chmod 755 /d4
-    chmod 755 /capkill/build/appmc
+    chmod 755 /capkc/build/appmc
     chmod 755 /wrapper/wrap
 
 %runscript
-    /wrapper/wrap 64000 18000 /capkill/build/appmc "$@"
+    /wrapper/wrap 64000 18000 /capkc/build/appmc "$@"

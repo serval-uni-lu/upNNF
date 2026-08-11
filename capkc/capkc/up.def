@@ -2,10 +2,10 @@ BootStrap: docker
 From: debian:bookworm-slim
 
 %files
-    ./src /capkill/src
-    ./test /capkill/test
-    ./gen.cpp /capkill/gen.cpp
-    ./dependencies /capkill/dependencies
+    ./src /capkc/src
+    ./test /capkc/test
+    ./gen.cpp /capkc/gen.cpp
+    ./dependencies /capkc/dependencies
 
 %post
     echo "setup start"
@@ -14,21 +14,21 @@ From: debian:bookworm-slim
 
     apt-get -y update
     apt-get -y install tzdata
-    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-random-dev libboost-program-options-dev cmake
+    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-random-dev libboost-program-options-dev cmake python3-dev
 
-    cd /capkill/dependencies/networkit
+    cd /capkc/dependencies/networkit
     rm -rf build
     mkdir build
     cd build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
     make -j8
 
-    cd /capkill
+    cd /capkc
     g++ gen.cpp -o gen
     ./gen -DCONTAINER
     ninja build/up
 
-    chmod 755 /capkill/build/up
+    chmod 755 /capkc/build/up
 
 %runscript
-    /capkill/build/up "$@"
+    /capkc/build/up "$@"
