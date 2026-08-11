@@ -189,6 +189,49 @@ print(r"""    \end{tabular}
 	\label{divkc:tab:gen}
 \end{table}""")
 
+print(r"""\begin{table}[h!]
+	\centering
+    \begin{tabular}{l|c|c|c|c}
+        Dataset & \#$F_\textit{total}$ & \#$\neg \text{\dfour}$ & \#$\neg \text{\dfour} \land \textit{CapKC}$ & \#$\neg \textit{\dfour} \land \textit{DivKC}$ \\ 
+        \hline""")
+
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    ld4 = d4[d4.index.str.contains(sub)]
+    ldivkc = divkc[divkc.index.str.contains(sub)]
+    lck = ck[ck.index.str.contains(sub)]
+
+    ld4 = ld4[ld4.status == "done"]
+    ldivkc = ldivkc[ldivkc.ok]
+    lck = lck[lck.ck_ok]
+    ld4d = lck[lck.d4d_ok]
+
+    sd4 = set(ld4.index)
+    sdivkc = set(ldivkc.index)
+    sck = set(lck.index)
+    sd4d = set(ld4d.index)
+
+    not_d4 = nbf - len(sd4)
+    ck_and_not_d4 = len(sck - sd4)
+    divkc_and_not_d4 = len(sdivkc - sd4)
+
+    # print(f"{vsub} & {nbf} & {onlyd4} & {nbf - len(sd4)} & {k} \\\\")
+    print(f"{vsub} & {nbf} & {not_d4} & {ck_and_not_d4} & {divkc_and_not_d4} \\\\")
+
+print(r"""    \end{tabular}
+        \caption{Experimental results regarding the scalability of Algorithm~\ref{divkc:alg:main}.
+		Column \#$F_\textit{total}$ indicates the total number of formulae in each dataset.
+		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by Algorithm~\ref{divkc:alg:main}.
+        Column \#$\neg\text{\dfour}$ shows the number of formulae not compiled by \dfour.
+        The last column indicates the number of formulae that were only compiled by Algorithm~\ref{divkc:alg:main}, but not by \dfour.
+	}
+	\label{divkc:tab:gen}
+\end{table}""")
+
 
 print(r"""\begin{table}[h!]
 	\centering
