@@ -14,7 +14,7 @@ From: debian:bookworm-slim
 
     apt-get -y update
     apt-get -y install tzdata
-    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-program-options-dev cmake
+    apt-get -y install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-build libboost-random-dev libboost-program-options-dev cmake
 
     cd /capkill/dependencies/networkit
     rm -rf build
@@ -26,9 +26,9 @@ From: debian:bookworm-slim
     cd /capkill
     g++ gen.cpp -o gen
     ./gen -DCONTAINER
-    ninja build/smp
+    ninja build/up
 
-    chmod 755 /capkill/build/smp
+    chmod 755 /capkill/build/up
 
 %runscript
-    /capkill/build/smp "$@"
+    /capkill/build/up "$@"

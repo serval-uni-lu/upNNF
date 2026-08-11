@@ -3,11 +3,6 @@
 This repository contains the programs and data associated with
 the article 'DivKC: A Divide-and-Conquer Approach to Knowledge Compilation'.
 
-## Results
-
-The `results` contains the raw results that are presented in the article as well
-as more detailed versions of the tables available in the article.
-
 ## D4
 
 The folder `D4` contains a slightly modified version of the D4 compiler.
