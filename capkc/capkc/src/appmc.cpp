@@ -62,7 +62,7 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
         using boost::math::normal_distribution;
         mpf_float const z = quantile(normal_distribution<mpf_float>(), 1 - mpf_float(alpha) / 2);
 
-        std::cout << "N,Y,Yl,Yh\n";
+        std::cout << "N,nbs,Y,Yl,Yh\n";
         std::atomic<bool> done = false;
 
         #pragma omp parallel
@@ -85,29 +85,55 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
                     }
 
                     if(nb_tries > 1) {
-                        //mpf_float sigma = 0.5;
-                        //sigma *= 0.5;
-                        mpf_float sigma = nb_tries * nb_success - nb_success * nb_success;
-                        sigma /= nb_tries * nb_tries;
-                        sigma /= nb_tries;
-                        sigma = boost::multiprecision::sqrt(sigma);
-
                         mpf_float estimate = rag.get_mc();
                         estimate *= nb_success;
                         estimate /= nb_tries;
 
-                        auto yl = estimate - z * sigma * rag.get_mc();
-                        auto yh = estimate + z * sigma * rag.get_mc();
+                        //mpf_float sigma = nb_tries * nb_success - nb_success * nb_success;
+                        //sigma /= nb_tries * nb_tries;
+                        //sigma /= nb_tries;
+                        //sigma = boost::multiprecision::sqrt(sigma);
 
-                        if((verbose || nb_tries == N) && nb_success != 0) {
-                            std::cout << nb_tries << ", " << estimate << ", " << yl << ", " << yh << "\n";
+                        //auto yl = estimate - z * sigma * rag.get_mc();
+                        //auto yh = estimate + z * sigma * rag.get_mc();
+
+                        mpf_float den = z * z;
+                        den /= nb_tries;
+                        den += 1;
+
+                        mpf_float pe = nb_success;
+                        pe /= nb_tries;
+
+                        mpf_float n1 = z * z;
+                        n1 /= 2 * nb_tries;
+
+                        mpf_float n2_1 = pe * (mpf_float(1) - pe);
+                        n2_1 /= nb_tries;
+
+                        mpf_float n2_2 = z * z;
+                        n2_2 /= nb_tries;
+                        n2_2 /= nb_tries;
+                        n2_2 /= 4;
+
+                        mpf_float const n2 = z * boost::multiprecision::sqrt(n2_1 + n2_2);
+
+                        mpf_float const pl = (pe + n1 - n2) / den;
+                        mpf_float const ph = (pe + n1 + n2) / den;
+
+                        auto const yl = mpf_float(rag.get_mc()) * pl;
+                        auto const yh = mpf_float(rag.get_mc()) * ph;
+
+
+                        if((verbose || nb_tries == N)) {
+                            std::cout << nb_tries << ", " << nb_success << ", " << estimate << ", " << yl << ", " << yh << "\n";
                         }
 
                         if(nb_success > 0 && lN > 0 && nb_tries >= lN && estimate / epsilon <= yl && estimate * epsilon >= yh) {
                             done.store(true);
 
-                            if(!verbose && nb_success != 0) {
-                                std::cout << nb_tries << ", " << estimate << ", " << yl << ", " << yh << "\n";
+
+                            if(!verbose) {
+                                std::cout << nb_tries << ", " << nb_success << ", " << estimate << ", " << yl << ", " << yh << "\n";
                             }
                         }
 
@@ -121,6 +147,7 @@ int setup_runner(po::variables_map const& vm, RAG & rag) {
                 }
             }
         }
+
     }
     catch(std::exception & e) {
         std::cerr << "EXCEPTION ERROR: " << e.what() << "\n";
