@@ -14,6 +14,7 @@ d4 = pd.read_csv("csv/d4.ddnnf.csv", skipinitialspace = True, index_col = 'file'
 total = pd.read_csv("csv/total.csv", skipinitialspace = True)
 cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
 ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file')
+ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file')
 
 
 # mc.dropna(inplace = True)
@@ -26,6 +27,8 @@ ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'fi
 divkc["ok"] = (divkc.splitter_status == "done") & (divkc.proj_status == "done") & (divkc.pd4_status == "done") & (divkc.ud4_status == "done") & (divkc.appmc_status == "done")
 ck["ck_ok"] = (ck.ck_status == "done") & (ck.ck_d4_status == "done") & (ck.ck_s_status == "done")
 ck["d4d_ok"] = (ck.d4d_status == "done") & (ck.d4d_s_status == "done")
+
+ck_amc["ok"] = (ck_amc.ck_status == "done") & (ck_amc.ck_d4_status == "done") & (ck_amc.ck_amc_status == "done")
 
 print(r"""\documentclass{article}
 
@@ -291,6 +294,62 @@ print(r"""        \end{tabular}
 	\label{divkc:tab:appmc}
 \end{table}""")
 
+print(r"""\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c}
+			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage \\
+            \hline""")
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    lck_amc = ck_amc[ck_amc.index.str.contains(sub)]
+    lck_amc = lck_amc[lck_amc.ok]
+
+    nlow = 0
+    nhigh = 0
+    nboth = 0
+    nb = 0
+
+    for f in lck_amc.index:
+        if f in mc.index:
+            pm = int(lck_amc.mc[f])
+            tm = int(mc.mc[f])
+            amc_n = lck_amc.ck_amc_nsuccess[f]
+            amc_s = lck_amc.ck_amc_n[f]
+            if pm != tm:
+                tm = mp.mpf(tm)
+                yl = mp.mpf(lck_amc.ck_amc_yl[f])
+                yh = mp.mpf(lck_amc.ck_amc_yh[f])
+
+                nlow += yl <= tm
+                nhigh += yh >= tm
+                nboth += (yh >= tm) and (yl <= tm)
+                nb += 1
+
+    if nb > 0:
+        nlow /= nb
+        nhigh /= nb
+        nboth /= nb
+
+        print(f"{vsub} & {nb} & {nlow:5.3f} & {nhigh:5.3f} & {nboth:5.3f}  \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & \\\\")
+
+print(r"""        \end{tabular}
+    % \end{adjustbox}
+    \caption{Experimental results for CapKC.
+		Column \#F indicates with how many formulae the statistics have been computed.
+        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by CapKC is correct (i.e., smaller than the true model count of $F$).
+		% Similarly, column $Y_h \geq |R_F|$ indicates how often the upper bound is correct.
+		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
+	}
+	\label{capkc:tab:appmc}
+\end{table}""")
+
 
 print(r"""\begin{table}[h!]
 	\centering
@@ -356,6 +415,63 @@ print(r"""            \end{tabular}
     and $Y_h \leq |R_{G_U}| \land Y_h \geq |R_F|$.
 	The last two columns represent the observed median and maximum values of the ratio $r_c = \frac{\textit{min}(Y_h, |R_{G_U}|) - \textit{max}(Y_l, |R_{G_P}|)}{|R_{G_U}| - |R_{G_P}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
 	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{divkc:tab:appmc}.
+	}
+	\label{divkc:tab:coverage}
+\end{table}""")
+
+print(r"""\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c}
+			Dataset & \#F & $Y_h \leq |R_{G_U}|$ & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
+            \hline """)
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    lck_amc = ck_amc[ck_amc.index.str.contains(sub)]
+    lck_amc = lck_amc[lck_amc.ok]
+
+    nlow = 0
+    nhigh = 0
+    nboth = 0
+    nb = 0
+
+    resl = []
+
+    for f in lck_amc.index:
+        if f in mc.index:
+            tm = int(mc.mc[f])
+            pm = int(lck_amc.mc[f])
+            yl = mp.mpf(lck_amc.ck_amc_yl[f])
+            yh = mp.mpf(lck_amc.ck_amc_yh[f])
+
+            if pm != tm:
+                tm = mp.mpf(tm)
+                pm = mp.mpf(pm)
+                nlow += (yl <= tm) and (yl <= pm)
+                nhigh += (yh >= tm) and (yh <= pm)
+                nboth += (yl <= tm) and (yh >= tm)
+
+                nb += 1
+
+                if (yl <= tm) and (yh >= tm):
+                    resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
+
+    if nb > 0:
+        nlow /= nb
+        nhigh /= nb
+        nboth /= nb
+
+        print(f"{vsub} & {nb} & {nhigh:5.3f} & {mp.nstr(median(resl), 3)} & {mp.nstr(max(resl), 3)} \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & & & \\\\")
+
+print(r"""            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC.
 	}
 	\label{divkc:tab:coverage}
 \end{table}""")

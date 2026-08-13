@@ -135,11 +135,11 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 3 & 0 & 0 \\
 		\begin{tabular}{l|c|c|c|c|c}
 			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage & $|R_{G_P}| \leq |R_F| \leq |R_{G_U}|$ \\
             \hline
-Global & 3670 & 0.833 & 0.868 & 0.701 & 1.000 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1689 & 0.816 & 0.911 & 0.727 & 1.000 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1307 & 0.788 & 0.913 & 0.701 & 1.000 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 403 & 0.965 & 0.792 & 0.757 & 1.000 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 271 & 0.956 & 0.494 & 0.450 & 1.000 \\
+Global & 3670 & 0.969 & 0.857 & 0.826 & 1.000 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1689 & 0.969 & 0.895 & 0.864 & 1.000 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1307 & 0.969 & 0.906 & 0.875 & 1.000 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 403 & 0.968 & 0.789 & 0.757 & 1.000 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 271 & 0.967 & 0.487 & 0.454 & 1.000 \\
         \end{tabular}
     % \end{adjustbox}
     \caption{Experimental results for Algorithm~\ref{divkc:alg:appmc}.
@@ -154,14 +154,35 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 271 & 0.956 & 0.494 & 0.450 & 
 \begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c}
+			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage \\
+            \hline
+Global & 517 & 0.994 & 0.986 & 0.981  \\
+$\hookrightarrow$ Lagniez \cite{D4} & 230 & 0.996 & 0.978 & 0.974  \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 199 & 0.990 & 0.995 & 0.985  \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 45 & 1.000 & 1.000 & 1.000  \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 43 & 1.000 & 0.977 & 0.977  \\
+        \end{tabular}
+    % \end{adjustbox}
+    \caption{Experimental results for CapKC.
+		Column \#F indicates with how many formulae the statistics have been computed.
+        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by CapKC is correct (i.e., smaller than the true model count of $F$).
+		% Similarly, column $Y_h \geq |R_F|$ indicates how often the upper bound is correct.
+		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
+	}
+	\label{capkc:tab:appmc}
+\end{table}
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c|c}
 			Dataset & \#F & $Y_l \geq |R_{G_P}|$ & $Y_h \leq |R_{G_U}|$ & Both & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
             \hline 
-Global & 3669 & 0.671 & 0.706 & 0.595 & 2.45e-11 & 1.0 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1689 & 0.691 & 0.729 & 0.622 & 2.64e-12 & 1.0 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1307 & 0.738 & 0.712 & 0.660 & 9.36e-8 & 1.0 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 403 & 0.695 & 0.769 & 0.610 & 1.64e-13 & 0.0153 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.185 & 0.441 & 0.085 & 1.59e-13 & 1.0 \\
+Global & 3669 & 0.807 & 0.836 & 0.721 & 4.17e-9 & 0.54 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1689 & 0.844 & 0.869 & 0.760 & 1.8e-9 & 0.54 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1307 & 0.920 & 0.893 & 0.834 & 1.75e-7 & 0.0962 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 403 & 0.697 & 0.769 & 0.610 & 1.64e-13 & 0.0153 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.196 & 0.448 & 0.093 & 1.69e-13 & 0.281 \\
             \end{tabular}
             % \end{adjustbox}
             \caption{Experimental results comparing the bounds obtained with Algorithm~\ref{divkc:alg:appmc} and with Lemma~\ref{divkc:lem:ebounds}.
@@ -172,6 +193,23 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.185 & 0.441 & 0.085 & 
     and $Y_h \leq |R_{G_U}| \land Y_h \geq |R_F|$.
 	The last two columns represent the observed median and maximum values of the ratio $r_c = \frac{\textit{min}(Y_h, |R_{G_U}|) - \textit{max}(Y_l, |R_{G_P}|)}{|R_{G_U}| - |R_{G_P}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
 	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{divkc:tab:appmc}.
+	}
+	\label{divkc:tab:coverage}
+\end{table}
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c}
+			Dataset & \#F & $Y_h \leq |R_{G_U}|$ & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
+            \hline 
+Global & 517 & 0.971 & 0.0118 & 0.0257 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 230 & 0.970 & 0.0122 & 0.0257 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 199 & 0.990 & 0.0121 & 0.0257 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 45 & 0.956 & 0.00864 & 0.0257 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 43 & 0.907 & 0.00143 & 0.0169 \\
+            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC.
 	}
 	\label{divkc:tab:coverage}
 \end{table}
