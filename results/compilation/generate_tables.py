@@ -297,8 +297,8 @@ print(r"""        \end{tabular}
 print(r"""\begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
-		\begin{tabular}{l|c|c|c|c}
-			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage \\
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage & $|R_F| \leq |R_{G_U}|$ \\
             \hline""")
 
 for x in total.index:
@@ -312,6 +312,7 @@ for x in total.index:
     nlow = 0
     nhigh = 0
     nboth = 0
+    ncheck = 0
     nb = 0
 
     for f in lck_amc.index:
@@ -321,6 +322,7 @@ for x in total.index:
             amc_n = lck_amc.ck_amc_nsuccess[f]
             amc_s = lck_amc.ck_amc_n[f]
             if pm != tm:
+                ncheck += tm <= pm
                 tm = mp.mpf(tm)
                 yl = mp.mpf(lck_amc.ck_amc_yl[f])
                 yh = mp.mpf(lck_amc.ck_amc_yh[f])
@@ -334,8 +336,9 @@ for x in total.index:
         nlow /= nb
         nhigh /= nb
         nboth /= nb
+        ncheck /= nb
 
-        print(f"{vsub} & {nb} & {nlow:5.3f} & {nhigh:5.3f} & {nboth:5.3f}  \\\\")
+        print(f"{vsub} & {nb} & {nlow:5.3f} & {nhigh:5.3f} & {nboth:5.3f} & {ncheck:5.3f} \\\\")
     else:
         print(f"{vsub} & {nb} & & & \\\\")
 
