@@ -59,6 +59,13 @@
 \newcommand\deff[0]{$\delta$\xspace}
 \newcommand\edeff[0]{$\delta'$\xspace}
 
+\newcommand\divkc[0]{DivKC\xspace}
+\newcommand\divkcs[0]{DivKC-S\xspace}
+\newcommand\divkcamc[0]{DivKC-AMC\xspace}
+\newcommand\capkc[0]{CapKC\xspace}
+\newcommand\capkcs[0]{CapKC-S\xspace}
+\newcommand\capkcamc[0]{CapKC-AMC\xspace}
+
 \newcommand\nmis[0]{\#{\textit MIS}\xspace}
 \newcommand\neqc[0]{\#{\textit eqv}\xspace}
 
@@ -212,6 +219,23 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 43 & 0.907 & 0.00143 & 0.0169 
             \caption{CapKC.
 	}
 	\label{divkc:tab:coverage}
+\end{table}
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\text{\approxmc}} \leq h$ & $l \leq Y_{\text{\divkcamc}} \leq h$ & $l \leq Y_{\text{\capkcamc}} \leq h$ \\ 
+            \hline 
+Global & 2505 & 0.977 & 0.901 & 0.984 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1211 & 1.000 & 0.916 & 0.982 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1104 & 0.969 & 0.885 & 0.984 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 169 & 0.858 & 0.893 & 1.000 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 21 & 1.000 & 0.952 & 1.000 \\
+            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC.
+	}
+	%\label{divkc:tab:coverage}
 \end{table}
 
 \end{document}

@@ -15,6 +15,10 @@ total = pd.read_csv("csv/total.csv", skipinitialspace = True)
 cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
 ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file')
 ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file')
+amc = pd.read_csv("csv/approxmc_e0.8d0.1.run.csv", skipinitialspace = True, index_col = 'file')
+
+amc = amc[amc.state == "done"]
+amc.dropna(inplace = True)
 
 
 # mc.dropna(inplace = True)
@@ -90,6 +94,13 @@ print(r"""\documentclass{article}
 \newcommand\tw[0]{{\textit tw}\xspace}
 \newcommand\deff[0]{$\delta$\xspace}
 \newcommand\edeff[0]{$\delta'$\xspace}
+
+\newcommand\divkc[0]{DivKC\xspace}
+\newcommand\divkcs[0]{DivKC-S\xspace}
+\newcommand\divkcamc[0]{DivKC-AMC\xspace}
+\newcommand\capkc[0]{CapKC\xspace}
+\newcommand\capkcs[0]{CapKC-S\xspace}
+\newcommand\capkcamc[0]{CapKC-AMC\xspace}
 
 \newcommand\nmis[0]{\#{\textit MIS}\xspace}
 \newcommand\neqc[0]{\#{\textit eqv}\xspace}
@@ -480,7 +491,69 @@ print(r"""            \end{tabular}
 \end{table}""")
 
 
+print(r"""\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\text{\approxmc}} \leq h$ & $l \leq Y_{\text{\divkcamc}} \leq h$ & $l \leq Y_{\text{\capkcamc}} \leq h$ \\ 
+            \hline """)
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    ldivkc = divkc[divkc.index.str.contains(sub)]
+    ldivkc = ldivkc[ldivkc.ok]
+
+    lck_amc = ck_amc[ck_amc.index.str.contains(sub)]
+    lck_amc = lck_amc[lck_amc.ok]
+
+    lamc = amc[amc.index.str.contains(sub)]
+
+    epsilon = 1.2
+
+    nb = 0
+    nappmc = 0
+    ndivkc = 0
+    nck = 0
+
+    resl = []
+
+    for f in lck_amc.index:
+        if f in mc.index and f in lamc.index and f in ldivkc.index:
+            ydivkc = mp.mpf(ldivkc.appmc_y[f])
+            yck = mp.mpf(lck_amc.ck_amc_y[f])
+            yamc = mp.mpf(lamc.amc[f])
+
+            tm = int(mc.mc[f])
+
+            high = epsilon * mp.mpf(tm)
+            low = mp.mpf(tm) / epsilon
+
+            nb += 1
+
+            nappmc += (yamc <= high) and (low <= yamc)
+            ndivkc += (ydivkc <= high) and (low <= ydivkc)
+            nck += (yck <= high) and (low <= yck)
+
+    if nb > 0:
+        nappmc /= nb
+        ndivkc /= nb
+        nck /= nb
+
+        print(f"{vsub} & {nb} & {nappmc:5.3f} & {ndivkc:5.3f} & {nck:5.3f} \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & \\\\")
+
+print(r"""            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC.
+	}
+	%\label{divkc:tab:coverage}
+\end{table}""")
+
+
 print(r"""
 \end{document}
 """)
-sys.exit(0)
