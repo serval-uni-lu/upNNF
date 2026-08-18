@@ -25,8 +25,8 @@ amc = amc[amc.state == "done"]
 amc.dropna(inplace = True)
 
 divkc["ok"] = (divkc.splitter_status == "done") & (divkc.proj_status == "done") & (divkc.pd4_status == "done") & (divkc.ud4_status == "done") & (divkc.appmc_status == "done")
-ck["ck_ok"] = (ck.ck_status == "done") & (ck.ck_d4_status == "done") & (ck.ck_s_status == "done")
-ck["d4d_ok"] = (ck.d4d_status == "done") & (ck.d4d_s_status == "done")
+ck["ck_ok"] = (ck.ck_status == "done") & (ck.ck_d4_status == "done") & (ck.ck_s_status == "done") & ((ck.ck_time + ck.ck_d4_time + ck.ck_s_time) <= (5 * 3600))
+# ck["d4d_ok"] = (ck.d4d_status == "done") & (ck.d4d_s_status == "done")
 
 ck_amc["ok"] = (ck_amc.ck_status == "done") & (ck_amc.ck_d4_status == "done") & (ck_amc.ck_amc_status == "done")
 
@@ -230,12 +230,12 @@ for x in total.index:
     ld4 = ld4[ld4.status == "done"]
     ldivkc = ldivkc[ldivkc.ok]
     lck = lck[lck.ck_ok]
-    ld4d = lck[lck.d4d_ok]
+    # ld4d = lck[lck.d4d_ok]
 
     sd4 = set(ld4.index)
     sdivkc = set(ldivkc.index)
     sck = set(lck.index)
-    sd4d = set(ld4d.index)
+    # sd4d = set(ld4d.index)
 
     not_d4 = nbf - len(sd4)
     ck_and_not_d4 = len(sck - sd4)
@@ -245,11 +245,7 @@ for x in total.index:
     print(f"{vsub} & {nbf} & {not_d4} & {ck_and_not_d4} & {divkc_and_not_d4} \\\\")
 
 print(r"""    \end{tabular}
-        \caption{Experimental results regarding the scalability of Algorithm~\ref{divkc:alg:main}.
-		Column \#$F_\textit{total}$ indicates the total number of formulae in each dataset.
-		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by Algorithm~\ref{divkc:alg:main}.
-        Column \#$\neg\text{\dfour}$ shows the number of formulae not compiled by \dfour.
-        The last column indicates the number of formulae that were only compiled by Algorithm~\ref{divkc:alg:main}, but not by \dfour.
+        \caption{Experimental results regarding the scalability of \divkc and \capkc.
 	}
 	\label{divkc:tab:gen}
 \end{table}
@@ -305,12 +301,9 @@ for x in total.index:
 
 print(r"""        \end{tabular}
     % \end{adjustbox}
-    \caption{Experimental results for Algorithm~\ref{divkc:alg:appmc}.
+    \caption{Experimental results for \divkcamc.
 		Column \#F indicates with how many formulae the statistics have been computed.
-        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by Algorithm~\ref{divkc:alg:appmc} is correct (i.e., smaller than the true model count of $F$).
-		% Similarly, column $Y_h \geq |R_F|$ indicates how often the upper bound is correct.
 		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
-        % The last column confirms the correctness of the bounds obtained using Lemma~\ref{divkc:lem:ebounds}.
 	}
 	\label{divkc:tab:appmc}
 \end{table}
@@ -435,10 +428,8 @@ for x in total.index:
 
 print(r"""            \end{tabular}
             % \end{adjustbox}
-            \caption{Experimental results comparing the bounds obtained with Algorithm~\ref{divkc:alg:appmc} and with Lemma~\ref{divkc:lem:ebounds}.
+            \caption{Experimental results comparing the bounds obtained with \divkcamc and with Lemma~\ref{divkc:lem:ebounds}.
 	Column \#F indicates with how many formulae the statistics have been computed.
-	% Column $Y_l \geq |R_{G_P}|$ indicates how often the lower bound returned by Algorithm~\ref{divkc:alg:appmc} is correct and larger than the lower bound obtained by using Lemma~\ref{divkc:lem:ebounds}.
-	% Similarly, column $Y_h \leq |R_{G_U}|$ indicates how often the upper bound returned by Algorithm~\ref{divkc:alg:appmc} is correct and better than the upper bound obtained by using Lemma~\ref{divkc:lem:ebounds}.
 	The 'Both' column indicates how often we have $Y_l \geq |R_{G_P}| \land Y_l \leq |R_F|$
     and $Y_h \leq |R_{G_U}| \land Y_h \geq |R_F|$.
 	The last two columns represent the observed median and maximum values of the ratio $r_c = \frac{\textit{min}(Y_h, |R_{G_U}|) - \textit{max}(Y_l, |R_{G_P}|)}{|R_{G_U}| - |R_{G_P}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
@@ -646,6 +637,56 @@ for x in total.index:
 
     for f in lck.index:
         if f in lamc.index:
+            nb += 1
+
+            dtime = lck.rtime[f]
+            atime = lamc.rtime[f]
+
+            nck += dtime <= atime
+            ratio.append(atime / dtime)
+
+    if nb > 0:
+        mi = f"{math.log(min(ratio), 10):5.1f}"
+        me = f"{mean(ratio):5.1f}"
+        med = f"{median(ratio):5.1f}"
+        ma = f"{math.log(max(ratio), 10):5.1f}"
+
+        print(f"{vsub} & {nb} & {nck} & {mi} & {me} & {med} & {ma} \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & \\\\")
+
+print(r"""            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC vs Approxmc7.
+	}
+	%\label{divkc:tab:coverage}
+\end{table}
+
+""")
+
+print(r"""\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c|c}
+            Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
+            \hline """)
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    lck = ckn4[ckn4.index.str.contains(sub)]
+    lck = lck[lck.ok]
+
+    lamc = amc[amc.index.str.contains(sub)]
+
+    nb = 0
+    nck = 0
+    ratio = []
+
+    for f in lck.index:
+        if f in lamc.index and (not f in mc.index or int(lck.mc[f]) != int(mc.mc[f])):
             nb += 1
 
             dtime = lck.rtime[f]
