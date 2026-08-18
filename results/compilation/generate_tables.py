@@ -123,7 +123,6 @@ print(r"""\documentclass{article}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c}
 			Dataset & \#$F_\textit{total}$ & min($|\var(F)|$) & max($|\var(F)|$) & min($|F|$) & max($|F|$) \\
             \hline
@@ -149,11 +148,10 @@ for x in total.index:
     print(f"{vsub} & {nbf} & {v_lo} & {v_hi} & {c_lo} & {c_hi} \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
             \caption{Dataset summary.
-		The first column indicates the dataset, and the \#F column indicates how many formulae the dataset contains.
+		The first column indicates the dataset, and the \#F column indicates how many satisfiable formulae the dataset contains.
 		The following columns indicate the minimum and maximum number of variables (resp. clauses) in the dataset.}
-	\label{divkc:tab:datasets}
+	\label{results:tab:datasets}
 \end{table}
 
 """)
