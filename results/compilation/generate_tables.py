@@ -59,6 +59,13 @@ print(r"""\documentclass{article}
 \usepackage{longtable}
 \usepackage{tikz}
 
+\usepackage[a4paper,
+            left=2cm,
+            right=2cm,
+            top=2cm,
+            bottom=2cm,
+            footskip=0.5cm]{geometry}
+
 \usepackage{adjustbox}
 \usepackage{subcaption}
 \usepackage{bbm}
@@ -159,7 +166,7 @@ print(r"""            \end{tabular}
 print(r"""\begin{table}[h!]
 	\centering
     \begin{tabular}{l|c|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$\textit{CK} \land \neg \text{\dfour}$ & \#$\textit{DivKC} \land \neg \textit{CK} \land \neg \text{\dfour}$ \\ 
+        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$\textit{\capkc} \land \neg \text{\dfour}$ & \#$\textit{\divkc} \land \neg \textit{\capkc} \land \neg \text{\dfour}$ \\ 
         \hline""")
 
 
@@ -213,8 +220,8 @@ print(r"""    \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-    \begin{tabular}{l|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\neg \text{\dfour}$ & \#$\neg \text{\dfour} \land \textit{CapKC}$ & \#$\neg \textit{\dfour} \land \textit{DivKC}$ \\ 
+    \begin{tabular}{l|c|c|c|c|c}
+        Dataset & \#$F_\textit{total}$ & \#$\neg \text{\dfour}$ & \#$\neg \text{\dfour} \land \textit{CapKC}$ & \#$\neg \textit{\dfour} \land \textit{DivKC}$ &  \#$\textit{\capkc} \land \neg \textit{\divkc} \land \neg \text{\dfour}$\\ 
         \hline""")
 
 
@@ -240,9 +247,10 @@ for x in total.index:
     not_d4 = nbf - len(sd4)
     ck_and_not_d4 = len(sck - sd4)
     divkc_and_not_d4 = len(sdivkc - sd4)
+    onlyck = len(sck - sdivkc - sd4)
 
     # print(f"{vsub} & {nbf} & {onlyd4} & {nbf - len(sd4)} & {k} \\\\")
-    print(f"{vsub} & {nbf} & {not_d4} & {ck_and_not_d4} & {divkc_and_not_d4} \\\\")
+    print(f"{vsub} & {nbf} & {not_d4} & {ck_and_not_d4} & {divkc_and_not_d4} & {onlyck} \\\\")
 
 print(r"""    \end{tabular}
         \caption{Experimental results regarding the scalability of \divkc and \capkc.
