@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 import numpy as np
 from mpmath import mp
 from statistics import median
@@ -17,22 +18,26 @@ ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'fi
 ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file')
 amc = pd.read_csv("csv/approxmc_e0.8d0.1.run.csv", skipinitialspace = True, index_col = 'file')
 
+divkcn4 = pd.read_csv("csv/divkc.appmc.n4.csv", skipinitialspace = True, index_col = 'file')
+ckn4 = pd.read_csv("csv/ck.amc.n4.csv", skipinitialspace = True, index_col = 'file')
+
 amc = amc[amc.state == "done"]
 amc.dropna(inplace = True)
-
-
-# mc.dropna(inplace = True)
-# divkc.dropna(inplace = True)
-# total.dropna(inplace = True)
-
-# d = divkc.join(mc, on = 'file')
-# d.dropna(inplace = True)
 
 divkc["ok"] = (divkc.splitter_status == "done") & (divkc.proj_status == "done") & (divkc.pd4_status == "done") & (divkc.ud4_status == "done") & (divkc.appmc_status == "done")
 ck["ck_ok"] = (ck.ck_status == "done") & (ck.ck_d4_status == "done") & (ck.ck_s_status == "done")
 ck["d4d_ok"] = (ck.d4d_status == "done") & (ck.d4d_s_status == "done")
 
 ck_amc["ok"] = (ck_amc.ck_status == "done") & (ck_amc.ck_d4_status == "done") & (ck_amc.ck_amc_status == "done")
+
+divkcn4["ok"] = (divkcn4.divkc_splitter_status == "done") & (divkcn4.divkc_proj_status == "done") & (divkcn4.divkc_d4p_status == "done") & (divkcn4.divkc_d4u_status == "done") & (divkcn4.divkc_amc1_status == "done") & (divkcn4.divkc_amc2_status == "done") & (divkcn4.divkc_amc3_status == "done") & (divkcn4.divkc_amc4_status == "done")
+
+ckn4["ok"] = (ckn4.ck_status == "done") & (ckn4.ck_d4_status == "done") & (ckn4.ck_amc1_status == "done") & (ckn4.ck_amc2_status == "done") & (ckn4.ck_amc3_status == "done") & (ckn4.ck_amc4_status == "done")
+
+
+amc["rtime"] = amc.time * 5
+divkcn4["rtime"] = (divkcn4.divkc_splitter_time + divkcn4.divkc_proj_time + divkcn4.divkc_d4p_time + divkcn4.divkc_d4u_time) + (divkcn4.divkc_amc1_time + divkcn4.divkc_amc2_time + divkcn4.divkc_amc3_time + divkcn4.divkc_amc4_time) * 5
+ckn4["rtime"] = (ckn4.ck_time + ckn4.ck_d4_time) + (ckn4.ck_amc1_time + ckn4.ck_amc2_time + ckn4.ck_amc3_time + ckn4.ck_amc4_time) * 5
 
 print(r"""\documentclass{article}
 
@@ -149,12 +154,14 @@ print(r"""            \end{tabular}
 		The first column indicates the dataset, and the \#F column indicates how many formulae the dataset contains.
 		The following columns indicate the minimum and maximum number of variables (resp. clauses) in the dataset.}
 	\label{divkc:tab:datasets}
-\end{table}""")
+\end{table}
+
+""")
 
 print(r"""\begin{table}[h!]
 	\centering
-    \begin{tabular}{l|c|c|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$+\text{\dfour}_\textit{ld}$ & \#$+\textit{CK}$ & \#$+\textit{DivKC}$ \\ 
+    \begin{tabular}{l|c|c|c|c|c}
+        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$\textit{CK} \land \neg \text{\dfour}$ & \#$\textit{DivKC} \land \neg \textit{CK} \land \neg \text{\dfour}$ \\ 
         \hline""")
 
 
@@ -170,38 +177,41 @@ for x in total.index:
     ld4 = ld4[ld4.status == "done"]
     ldivkc = ldivkc[ldivkc.ok]
     lck = lck[lck.ck_ok]
-    ld4d = lck[lck.d4d_ok]
+    #ld4d = lck[lck.d4d_ok]
 
     sd4 = set(ld4.index)
     sdivkc = set(ldivkc.index)
     sck = set(lck.index)
-    sd4d = set(ld4d.index)
+    #sd4d = set(ld4d.index)
 
     not_d4 = nbf - len(sd4)
-    onlyd4 = len(sd4 - sdivkc - sck - sd4d)
-    addd4d = len(sd4d - sd4)
-    addck = len(sck - sd4d - sd4)
-    adddivkc = len(sdivkc - sck - sd4d - sd4)
+    onlyd4 = len(sd4 - sdivkc - sck)
+    #addd4d = len(sd4d - sd4)
+    addck = len(sck - sd4)
+    adddivkc = len(sdivkc - sck - sd4)
 
-    k = len(sdivkc - sd4)
-    onlyd4d = len(((sd4d - sck) - sdivkc) - sd4)
-    onlydivkc = len(sdivkc - sd4 - sck - sd4d)
+    # k = len(sdivkc - sd4)
+    # onlyd4d = len(((sd4d - sck) - sdivkc) - sd4)
+    # onlydivkc = len(sdivkc - sd4 - sck - sd4d)
 
-    if k > 0:
-        k = "\\textbf{" + str(k) + "}"
+    #if k > 0:
+        # k = "\\textbf{" + str(k) + "}"
 
     # print(f"{vsub} & {nbf} & {onlyd4} & {nbf - len(sd4)} & {k} \\\\")
-    print(f"{vsub} & {nbf} & {onlyd4} & {not_d4} & {addd4d} & {addck} & {adddivkc} \\\\")
+    print(f"{vsub} & {nbf} & {onlyd4} & {not_d4} & {addck} & {adddivkc} \\\\")
 
 print(r"""    \end{tabular}
-        \caption{Experimental results regarding the scalability of Algorithm~\ref{divkc:alg:main}.
+        \caption{Experimental results regarding the scalability of \divkc and \capkc.
 		Column \#$F_\textit{total}$ indicates the total number of formulae in each dataset.
-		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by Algorithm~\ref{divkc:alg:main}.
+		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by \divkc or \capkc.
         Column \#$\neg\text{\dfour}$ shows the number of formulae not compiled by \dfour.
-        The last column indicates the number of formulae that were only compiled by Algorithm~\ref{divkc:alg:main}, but not by \dfour.
+        Column \#$\textit{CK} \land \neg \text{\dfour}$ shows the number of formulae that are compiled by \capkc but not by \dfour.
+        The last column indicates the number of formulae that were only compiled by \divkc, but not by \dfour or \capkc.
 	}
 	\label{divkc:tab:gen}
-\end{table}""")
+\end{table}
+
+""")
 
 print(r"""\begin{table}[h!]
 	\centering
@@ -244,7 +254,9 @@ print(r"""    \end{tabular}
         The last column indicates the number of formulae that were only compiled by Algorithm~\ref{divkc:alg:main}, but not by \dfour.
 	}
 	\label{divkc:tab:gen}
-\end{table}""")
+\end{table}
+
+""")
 
 
 print(r"""\begin{table}[h!]
@@ -303,7 +315,9 @@ print(r"""        \end{tabular}
         % The last column confirms the correctness of the bounds obtained using Lemma~\ref{divkc:lem:ebounds}.
 	}
 	\label{divkc:tab:appmc}
-\end{table}""")
+\end{table}
+
+""")
 
 print(r"""\begin{table}[h!]
 	\centering
@@ -362,7 +376,9 @@ print(r"""        \end{tabular}
 		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
 	}
 	\label{capkc:tab:appmc}
-\end{table}""")
+\end{table}
+
+""")
 
 
 print(r"""\begin{table}[h!]
@@ -431,7 +447,9 @@ print(r"""            \end{tabular}
 	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{divkc:tab:appmc}.
 	}
 	\label{divkc:tab:coverage}
-\end{table}""")
+\end{table}
+
+""")
 
 print(r"""\begin{table}[h!]
 	\centering
@@ -488,7 +506,9 @@ print(r"""            \end{tabular}
             \caption{CapKC.
 	}
 	\label{divkc:tab:coverage}
-\end{table}""")
+\end{table}
+
+""")
 
 
 print(r"""\begin{table}[h!]
@@ -551,7 +571,109 @@ print(r"""            \end{tabular}
             \caption{CapKC.
 	}
 	%\label{divkc:tab:coverage}
-\end{table}""")
+\end{table}
+
+""")
+
+print(r"""\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c|c}
+            Dataset & \#F & \#\divkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
+            \hline """)
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    ldivkc = divkcn4[divkcn4.index.str.contains(sub)]
+    ldivkc = ldivkc[ldivkc.ok]
+
+    lamc = amc[amc.index.str.contains(sub)]
+
+    nb = 0
+    ndivkc = 0
+    ratio = []
+
+    for f in ldivkc.index:
+        if f in lamc.index:
+            nb += 1
+
+            dtime = ldivkc.rtime[f]
+            atime = lamc.rtime[f]
+
+            ndivkc += dtime <= atime
+            ratio.append(atime / dtime)
+
+    if nb > 0:
+        mi = f"{math.log(min(ratio), 10):5.1f}"
+        me = f"{mean(ratio):5.1f}"
+        med = f"{median(ratio):5.1f}"
+        ma = f"{math.log(max(ratio), 10):5.1f}"
+
+        print(f"{vsub} & {nb} & {ndivkc} & {mi} & {me} & {med} & {ma} \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & \\\\")
+
+print(r"""            \end{tabular}
+            % \end{adjustbox}
+            \caption{DivKC vs Approxmc7.
+	}
+	%\label{divkc:tab:coverage}
+\end{table}
+
+""")
+
+print(r"""\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c|c}
+            Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
+            \hline """)
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    lck = ckn4[ckn4.index.str.contains(sub)]
+    lck = lck[lck.ok]
+
+    lamc = amc[amc.index.str.contains(sub)]
+
+    nb = 0
+    nck = 0
+    ratio = []
+
+    for f in lck.index:
+        if f in lamc.index:
+            nb += 1
+
+            dtime = lck.rtime[f]
+            atime = lamc.rtime[f]
+
+            nck += dtime <= atime
+            ratio.append(atime / dtime)
+
+    if nb > 0:
+        mi = f"{math.log(min(ratio), 10):5.1f}"
+        me = f"{mean(ratio):5.1f}"
+        med = f"{median(ratio):5.1f}"
+        ma = f"{math.log(max(ratio), 10):5.1f}"
+
+        print(f"{vsub} & {nb} & {nck} & {mi} & {me} & {med} & {ma} \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & \\\\")
+
+print(r"""            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC vs Approxmc7.
+	}
+	%\label{divkc:tab:coverage}
+\end{table}
+
+""")
 
 
 print(r"""

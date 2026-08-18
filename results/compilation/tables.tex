@@ -98,25 +98,30 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 0 & 31012 & 0 & 350120 \
 		The following columns indicate the minimum and maximum number of variables (resp. clauses) in the dataset.}
 	\label{divkc:tab:datasets}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
-    \begin{tabular}{l|c|c|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$+\text{\dfour}_\textit{ld}$ & \#$+\textit{CK}$ & \#$+\textit{DivKC}$ \\ 
+    \begin{tabular}{l|c|c|c|c|c}
+        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$\textit{CK} \land \neg \text{\dfour}$ & \#$\textit{DivKC} \land \neg \textit{CK} \land \neg \text{\dfour}$ \\ 
         \hline
-Global & 4550 & 185 & 670 & 1 & 79 & 55 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1948 & 53 & 213 & 1 & 39 & 23 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1823 & 100 & 393 & 0 & 40 & 28 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 501 & 31 & 61 & 0 & 0 & 4 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 1 & 3 & 0 & 0 & 0 \\
+Global & 4550 & 185 & 670 & 80 & 55 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1948 & 53 & 213 & 40 & 23 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1823 & 100 & 393 & 40 & 28 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 501 & 31 & 61 & 0 & 4 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 1 & 3 & 0 & 0 \\
     \end{tabular}
-        \caption{Experimental results regarding the scalability of Algorithm~\ref{divkc:alg:main}.
+        \caption{Experimental results regarding the scalability of \divkc and \capkc.
 		Column \#$F_\textit{total}$ indicates the total number of formulae in each dataset.
-		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by Algorithm~\ref{divkc:alg:main}.
+		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by \divkc or \capkc.
         Column \#$\neg\text{\dfour}$ shows the number of formulae not compiled by \dfour.
-        The last column indicates the number of formulae that were only compiled by Algorithm~\ref{divkc:alg:main}, but not by \dfour.
+        Column \#$\textit{CK} \land \neg \text{\dfour}$ shows the number of formulae that are compiled by \capkc but not by \dfour.
+        The last column indicates the number of formulae that were only compiled by \divkc, but not by \dfour or \capkc.
 	}
 	\label{divkc:tab:gen}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
     \begin{tabular}{l|c|c|c|c}
@@ -136,6 +141,8 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 278 & 3 & 0 & 0 \\
 	}
 	\label{divkc:tab:gen}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
@@ -158,6 +165,8 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 271 & 0.967 & 0.487 & 0.454 & 
 	}
 	\label{divkc:tab:appmc}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
@@ -179,6 +188,8 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 43 & 1.000 & 0.977 & 0.977 & 1
 	}
 	\label{capkc:tab:appmc}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
@@ -203,6 +214,8 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.196 & 0.448 & 0.093 & 
 	}
 	\label{divkc:tab:coverage}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
@@ -220,6 +233,8 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 43 & 0.907 & 0.00143 & 0.0169 
 	}
 	\label{divkc:tab:coverage}
 \end{table}
+
+
 \begin{table}[h!]
 	\centering
 	% \begin{adjustbox}{width=\textwidth}
@@ -237,6 +252,46 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 21 & 1.000 & 0.952 & 1.000 \\
 	}
 	%\label{divkc:tab:coverage}
 \end{table}
+
+
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c|c}
+            Dataset & \#F & \#\divkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
+            \hline 
+Global & 3188 & 2129 &  -3.7 & 160.7 &   1.9 &   5.1 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1599 & 1160 &  -3.0 & 239.1 &   2.1 &   4.9 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1349 & 855 &  -3.6 &   6.2 &   1.8 &   3.6 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 218 & 97 &  -3.7 &   1.3 &   0.9 &   1.2 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 17 &  -1.0 & 5507.7 &  12.6 &   5.1 \\
+            \end{tabular}
+            % \end{adjustbox}
+            \caption{DivKC vs Approxmc7.
+	}
+	%\label{divkc:tab:coverage}
+\end{table}
+
+
+\begin{table}[h!]
+	\centering
+	% \begin{adjustbox}{width=\textwidth}
+		\begin{tabular}{l|c|c|c|c|c|c}
+            Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
+            \hline 
+Global & 2514 & 1554 &  -2.3 & 179.1 &   1.8 &   5.0 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1205 & 773 &  -2.3 & 287.9 &   2.0 &   5.0 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1111 & 651 &  -2.2 &   3.3 &   1.6 &   2.8 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 176 & 111 &  -1.2 &   2.1 &   1.5 &   1.1 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 19 &  -0.9 & 4517.2 &  11.1 &   5.0 \\
+            \end{tabular}
+            % \end{adjustbox}
+            \caption{CapKC vs Approxmc7.
+	}
+	%\label{divkc:tab:coverage}
+\end{table}
+
+
 
 \end{document}
 
