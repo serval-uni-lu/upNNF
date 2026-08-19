@@ -341,7 +341,7 @@ for x in total.index:
 
     for f in lck_amc.index:
         if f in mc.index:
-            pm = int(lck_amc.mc[f])
+            pm = int(lck_amc.ck_umc[f])
             tm = int(mc.mc[f])
             amc_n = lck_amc.ck_amc_nsuccess[f]
             amc_s = lck_amc.ck_amc_n[f]
@@ -473,7 +473,7 @@ for x in total.index:
     for f in lck_amc.index:
         if f in mc.index:
             tm = int(mc.mc[f])
-            pm = int(lck_amc.mc[f])
+            pm = int(lck_amc.ck_umc[f])
             yl = mp.mpf(lck_amc.ck_amc_yl[f])
             yh = mp.mpf(lck_amc.ck_amc_yh[f])
 
@@ -486,7 +486,8 @@ for x in total.index:
 
                 nb += 1
 
-                if pm > 0:
+                # if pm > 0:
+                if (yl <= tm) and (yh >= tm):
                     resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
                     # resl.append(yl)
 
@@ -503,7 +504,7 @@ for x in total.index:
             ma = "-"
 
 
-        print(f"{vsub} & {nb} - {len(resl)} & {nhigh:5.3f} & {med} & {ma} \\\\")
+        print(f"{vsub} & {nb} & {nhigh:5.3f} & {med} & {ma} \\\\")
     else:
         print(f"{vsub} & {nb} & & & & & \\\\")
 
@@ -703,7 +704,7 @@ for x in total.index:
     ratio = []
 
     for f in lck.index:
-        if f in lamc.index and (not f in mc.index or int(lck.mc[f]) != int(mc.mc[f])):
+        if f in lamc.index and (not f in mc.index or int(lck.ck_umc[f]) != int(mc.mc[f])):
             nb += 1
 
             dtime = lck.rtime[f]
