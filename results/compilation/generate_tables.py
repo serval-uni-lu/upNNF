@@ -9,17 +9,17 @@ import sys
 
 sys.set_int_max_str_digits(100_000)
 
-mc = pd.read_csv("csv/mc.csv", skipinitialspace = True, index_col = 'file')
-divkc = pd.read_csv("csv/divkc.csv", skipinitialspace = True, index_col = 'file')
-d4 = pd.read_csv("csv/d4.ddnnf.csv", skipinitialspace = True, index_col = 'file')
+mc = pd.read_csv("csv/mc.csv", skipinitialspace = True, index_col = 'file', dtype = str)
+divkc = pd.read_csv("csv/divkc.csv", skipinitialspace = True, index_col = 'file', dtype = {'pmc': str, 'umc': str, 'appmc_y': str, 'appmc_yl': str, 'appmc_yh': str})
+d4 = pd.read_csv("csv/d4.ddnnf.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
 total = pd.read_csv("csv/total.csv", skipinitialspace = True)
 cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
-ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file')
-ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file')
-amc = pd.read_csv("csv/approxmc_e0.8d0.1.run.csv", skipinitialspace = True, index_col = 'file')
+ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file', dtype = {'ck_mc': str, 'd4d_mc': str})
+ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str, 'ck_amc_y': str, 'ck_amc_yl': str, 'ck_amc_yh': str})
+amc = pd.read_csv("csv/approxmc_e0.8d0.1.run.csv", skipinitialspace = True, index_col = 'file', dtype = {'amc': str})
 
-divkcn4 = pd.read_csv("csv/divkc.appmc.n4.csv", skipinitialspace = True, index_col = 'file')
-ckn4 = pd.read_csv("csv/ck.amc.n4.csv", skipinitialspace = True, index_col = 'file')
+divkcn4 = pd.read_csv("csv/divkc.appmc.n4.csv", skipinitialspace = True, index_col = 'file', dtype = {'divkc_pmc': str, 'divkc_umc': str})
+ckn4 = pd.read_csv("csv/ck.amc.n4.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
 
 amc = amc[amc.state == "done"]
 amc.dropna(inplace = True)
@@ -486,15 +486,24 @@ for x in total.index:
 
                 nb += 1
 
-                if (yl <= tm) and (yh >= tm):
+                if pm > 0:
                     resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
+                    # resl.append(yl)
 
     if nb > 0:
         nlow /= nb
         nhigh /= nb
         nboth /= nb
 
-        print(f"{vsub} & {nb} & {nhigh:5.3f} & {mp.nstr(median(resl), 3)} & {mp.nstr(max(resl), 3)} \\\\")
+        if len(resl) > 0:
+            med = mp.nstr(median(resl), 3)
+            ma = mp.nstr(max(resl), 3)
+        else:
+            med = "-"
+            ma = "-"
+
+
+        print(f"{vsub} & {nb} - {len(resl)} & {nhigh:5.3f} & {med} & {ma} \\\\")
     else:
         print(f"{vsub} & {nb} & & & & & \\\\")
 
