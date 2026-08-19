@@ -477,14 +477,18 @@ for x in total.index:
                 #nboth += (yl <= tm) and (yh >= tm)
 
                 if yh > pm:
-                    print(f"{f}, {lck_amc.ck_umc[f]}, {lck_amc.ck_amc_yh[f]}", file = sys.stderr)
+                    print(f"{f}, {lck_amc.ck_umc[f]}, {lck_amc.ck_amc_yh[f]}, {lck_amc.ck_amc_yl[f]}, {lck_amc.ck_amc_nsuccess[f]}", file = sys.stderr)
+                if yl < 0:
+                    print(f"{f}, {0}, {lck_amc.ck_amc_yl[f]}", file = sys.stderr)
+
 
                 nb += 1
 
                 # if pm > 0:
                 #if (yl <= tm) and (yh >= tm):
                 if yh <= pm:
-                    resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
+                    # resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
+                    resl.append((yh - yl) / (pm))
                     # resl.append(yl)
 
     if nb > 0:
@@ -505,7 +509,10 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & & & \\\\")
 
 print(r"""            \end{tabular}
-            \caption{\capkc.
+    \caption{Experimental results comparing the bounds obtained with \capkc.
+	Column \#F indicates with how many formulae the statistics have been computed.
+	The last two columns represent the observed median and maximum values of the ratio $r_c = \dfrac{Y_h - Y_l}{|R_{G_U}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
+	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{capkc:tab:appmc}.
 	}
 	\label{capkc:tab:coverage}
 \end{table}
