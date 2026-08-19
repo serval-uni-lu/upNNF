@@ -9,10 +9,10 @@ import sys
 
 sys.set_int_max_str_digits(100_000)
 
+total = pd.read_csv("csv/total.csv", skipinitialspace = True)
 mc = pd.read_csv("csv/mc.csv", skipinitialspace = True, index_col = 'file', dtype = str)
 divkc = pd.read_csv("csv/divkc.csv", skipinitialspace = True, index_col = 'file', dtype = {'pmc': str, 'umc': str, 'appmc_y': str, 'appmc_yl': str, 'appmc_yh': str})
 d4 = pd.read_csv("csv/d4.ddnnf.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
-total = pd.read_csv("csv/total.csv", skipinitialspace = True)
 cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
 ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file', dtype = {'ck_mc': str, 'd4d_mc': str})
 ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str, 'ck_amc_y': str, 'ck_amc_yl': str, 'ck_amc_yh': str})
@@ -131,7 +131,7 @@ print(r"""\documentclass{article}
 print(r"""\begin{table}[h!]
 	\centering
 		\begin{tabular}{l|c|c|c|c|c}
-			Dataset & \#$F_\textit{total}$ & min($|\var(F)|$) & max($|\var(F)|$) & min($|F|$) & max($|F|$) \\
+			Dataset & \#$F_\textit{total}$ & $\textit{min}(|\var(F)|)$ & $\textit{max}(|\var(F)|)$ & $\textit{min}(|F|)$ & $\textit{max}(|F|)$ \\
             \hline
 """)
 
@@ -156,7 +156,7 @@ for x in total.index:
 
 print(r"""            \end{tabular}
             \caption{Dataset summary.
-		The first column indicates the dataset, and the \#F column indicates how many satisfiable formulae the dataset contains.
+		The first column indicates the dataset, and the \#$F_\textit{total}$ column indicates how many satisfiable formulae the dataset contains.
 		The following columns indicate the minimum and maximum number of variables (resp. clauses) in the dataset.}
 	\label{results:tab:datasets}
 \end{table}
@@ -166,7 +166,7 @@ print(r"""            \end{tabular}
 print(r"""\begin{table}[h!]
 	\centering
     \begin{tabular}{l|c|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\text{\dfour}$ & \#$\neg \text{\dfour}$ & \#$\textit{\capkc} \land \neg \text{\dfour}$ & \#$\textit{\divkc} \land \neg \textit{\capkc} \land \neg \text{\dfour}$ \\ 
+        Dataset & \#$F_\textit{total}$ & \#$\textit{\dfour}$ & \#$\neg \textit{\dfour}$ & \#$\textit{\capkc} \land \neg \textit{\dfour}$ & \#$\textit{\divkc} \land \neg \textit{\capkc} \land \neg \textit{\dfour}$ \\ 
         \hline""")
 
 
@@ -209,8 +209,8 @@ print(r"""    \end{tabular}
         \caption{Experimental results regarding the scalability of \divkc and \capkc.
 		Column \#$F_\textit{total}$ indicates the total number of formulae in each dataset.
 		The next column shows the number of formulae compiled only by \dfour~\cite{D4} but not by \divkc or \capkc.
-        Column \#$\neg\text{\dfour}$ shows the number of formulae not compiled by \dfour.
-        Column \#$\textit{CK} \land \neg \text{\dfour}$ shows the number of formulae that are compiled by \capkc but not by \dfour.
+        Column \#$\neg\textit{\dfour}$ shows the number of formulae not compiled by \dfour.
+        Column \#$\textit{CK} \land \neg \textit{\dfour}$ shows the number of formulae that are compiled by \capkc but not by \dfour.
         The last column indicates the number of formulae that were only compiled by \divkc, but not by \dfour or \capkc.
 	}
 	\label{divkc:tab:gen}
@@ -221,7 +221,7 @@ print(r"""    \end{tabular}
 print(r"""\begin{table}[h!]
 	\centering
     \begin{tabular}{l|c|c|c|c|c}
-        Dataset & \#$F_\textit{total}$ & \#$\neg \text{\dfour}$ & \#$\neg \text{\dfour} \land \textit{CapKC}$ & \#$\neg \textit{\dfour} \land \textit{DivKC}$ &  \#$\textit{\capkc} \land \neg \textit{\divkc} \land \neg \text{\dfour}$\\ 
+        Dataset & \#$F_\textit{total}$ & \#$\neg \textit{\dfour}$ & \#$\neg \textit{\dfour} \land \textit{\capkc}$ & \#$\neg \textit{\dfour} \land \textit{\divkc}$ &  \#$\textit{\capkc} \land \neg \textit{\divkc} \land \neg \textit{\dfour}$\\ 
         \hline""")
 
 
@@ -263,7 +263,6 @@ print(r"""    \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c}
 			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage & $|R_{G_P}| \leq |R_F| \leq |R_{G_U}|$ \\
             \hline""")
@@ -308,7 +307,6 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & & \\\\")
 
 print(r"""        \end{tabular}
-    % \end{adjustbox}
     \caption{Experimental results for \divkcamc.
 		Column \#F indicates with how many formulae the statistics have been computed.
 		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
@@ -320,7 +318,6 @@ print(r"""        \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c}
 			Dataset & \#F & $Y_l \leq |R_F|$ & $Y_h \geq |R_F|$ & Coverage & $|R_F| \leq |R_{G_U}|$ \\
             \hline""")
@@ -367,10 +364,9 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""        \end{tabular}
-    % \end{adjustbox}
-    \caption{Experimental results for CapKC.
+    \caption{Experimental results for \capkc.
 		Column \#F indicates with how many formulae the statistics have been computed.
-        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by CapKC is correct (i.e., smaller than the true model count of $F$).
+        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by \capkc is correct (i.e., smaller than the true model count of $F$).
 		% Similarly, column $Y_h \geq |R_F|$ indicates how often the upper bound is correct.
 		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
 	}
@@ -382,7 +378,6 @@ print(r"""        \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c|c}
 			Dataset & \#F & $Y_l \geq |R_{G_P}|$ & $Y_h \leq |R_{G_U}|$ & Both & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
             \hline """)
@@ -435,7 +430,6 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & & & \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
             \caption{Experimental results comparing the bounds obtained with \divkcamc and with Lemma~\ref{divkc:lem:ebounds}.
 	Column \#F indicates with how many formulae the statistics have been computed.
 	The 'Both' column indicates how often we have $Y_l \geq |R_{G_P}| \land Y_l \leq |R_F|$
@@ -450,7 +444,6 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c}
 			Dataset & \#F & $Y_h \leq |R_{G_U}|$ & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
             \hline """)
@@ -509,8 +502,7 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & & & \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
-            \caption{CapKC.
+            \caption{\capkc.
 	}
 	\label{divkc:tab:coverage}
 \end{table}
@@ -520,9 +512,8 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c}
-			Dataset & \#F & $l \leq Y_{\text{\approxmc}} \leq h$ & $l \leq Y_{\text{\divkcamc}} \leq h$ & $l \leq Y_{\text{\capkcamc}} \leq h$ \\ 
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
             \hline """)
 
 for x in total.index:
@@ -574,8 +565,7 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
-            \caption{CapKC.
+            \caption{\capkc.
 	}
 	%\label{divkc:tab:coverage}
 \end{table}
@@ -584,7 +574,6 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\divkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline """)
@@ -624,8 +613,7 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
-            \caption{DivKC vs Approxmc7.
+            \caption{\divkc vs Approxmc7.
 	}
 	%\label{divkc:tab:coverage}
 \end{table}
@@ -634,7 +622,6 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline """)
@@ -674,8 +661,7 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
-            \caption{CapKC vs Approxmc7.
+            \caption{\capkc vs Approxmc7.
 	}
 	%\label{divkc:tab:coverage}
 \end{table}
@@ -684,7 +670,6 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-	% \begin{adjustbox}{width=\textwidth}
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline """)
@@ -724,8 +709,7 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
-            % \end{adjustbox}
-            \caption{CapKC vs Approxmc7.
+            \caption{\capkc vs Approxmc7.
 	}
 	%\label{divkc:tab:coverage}
 \end{table}
