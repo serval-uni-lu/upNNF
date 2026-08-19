@@ -366,8 +366,6 @@ for x in total.index:
 print(r"""        \end{tabular}
     \caption{Experimental results for \capkc.
 		Column \#F indicates with how many formulae the statistics have been computed.
-        % Column $Y_l \leq |R_F|$ indicates how often the lower bound returned by \capkc is correct (i.e., smaller than the true model count of $F$).
-		% Similarly, column $Y_h \geq |R_F|$ indicates how often the upper bound is correct.
 		The 'Coverage' column indicates how often $|R_F|$ is within the confidence interval $[Y_l; Y_h]$ and thus measures the accuracy of our method.
 	}
 	\label{capkc:tab:appmc}
@@ -456,38 +454,43 @@ for x in total.index:
     lck_amc = ck_amc[ck_amc.index.str.contains(sub)]
     lck_amc = lck_amc[lck_amc.ok]
 
-    nlow = 0
+    #nlow = 0
     nhigh = 0
-    nboth = 0
+    #nboth = 0
     nb = 0
 
     resl = []
 
     for f in lck_amc.index:
-        if f in mc.index:
-            tm = int(mc.mc[f])
+        if True:
+            #tm = int(mc.mc[f])
             pm = int(lck_amc.ck_umc[f])
             yl = mp.mpf(lck_amc.ck_amc_yl[f])
             yh = mp.mpf(lck_amc.ck_amc_yh[f])
 
-            if pm != tm:
-                tm = mp.mpf(tm)
+            if (not f in mc.index or (pm != int(mc.mc[f]))) and (pd.isna(d4.mc[f]) or (pm != int(d4.mc[f]))):
+                #tm = mp.mpf(tm)
                 pm = mp.mpf(pm)
-                nlow += (yl <= tm) and (yl <= pm)
-                nhigh += (yh >= tm) and (yh <= pm)
-                nboth += (yl <= tm) and (yh >= tm)
+                #nlow += (yl <= tm) and (yl <= pm)
+                # nhigh += (yh >= tm) and (yh <= pm)
+                nhigh += (yh <= pm)
+                #nboth += (yl <= tm) and (yh >= tm)
+
+                if yh > pm:
+                    print(f"{f}, {lck_amc.ck_umc[f]}, {lck_amc.ck_amc_yh[f]}", file = sys.stderr)
 
                 nb += 1
 
                 # if pm > 0:
-                if (yl <= tm) and (yh >= tm):
+                #if (yl <= tm) and (yh >= tm):
+                if yh <= pm:
                     resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
                     # resl.append(yl)
 
     if nb > 0:
-        nlow /= nb
+        #nlow /= nb
         nhigh /= nb
-        nboth /= nb
+        #nboth /= nb
 
         if len(resl) > 0:
             med = mp.nstr(median(resl), 3)
@@ -504,7 +507,7 @@ for x in total.index:
 print(r"""            \end{tabular}
             \caption{\capkc.
 	}
-	\label{divkc:tab:coverage}
+	\label{capkc:tab:coverage}
 \end{table}
 
 """)
