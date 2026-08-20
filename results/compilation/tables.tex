@@ -209,9 +209,9 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.196 & 0.448 & 0.093 & 
 		\begin{tabular}{l|c|c|c|c}
 			Dataset & \#F & $Y_h \leq |R_{G_U}|$ & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
             \hline 
-Global & 334 & 0.994 & 0.00812 & 0.0257 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 175 & 0.994 & 0.00753 & 0.0257 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 153 & 0.993 & 0.00861 & 0.0257 \\
+Global & 334 & 0.994 & 0.00794 & 0.0257 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 175 & 0.994 & 0.0072 & 0.0257 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 153 & 0.993 & 0.00837 & 0.0257 \\
 $\hookrightarrow$ Plazar \cite{Plazar2019} & 4 & 1.000 & 0.00684 & 0.0257 \\
 $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 2 & 1.000 & 0.00981 & 0.0155 \\
             \end{tabular}
@@ -226,14 +226,14 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 2 & 1.000 & 0.00981 & 0.0155 \
 
 \begin{table}[h!]
 	\centering
-		\begin{tabular}{l|c|c|c|c}
-			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & \#F$_{\textit{\capkcamc}}$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
             \hline 
-Global & 2713 & 0.973 & 0.871 & 0.981 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1329 & 1.000 & 0.889 & 0.980 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1177 & 0.964 & 0.847 & 0.979 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 185 & 0.838 & 0.892 & 0.995 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 1.000 & 0.955 & 1.000 \\
+Global & 2713 & 0.973 & 0.871 & 298 & 0.826 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1329 & 1.000 & 0.889 & 148 & 0.824 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1177 & 0.964 & 0.847 & 147 & 0.830 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 185 & 0.838 & 0.892 & 3 & 0.667 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 1.000 & 0.955 & 0 & 0.000 \\
             \end{tabular}
             \caption{\capkc.
 	}
@@ -263,11 +263,11 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 17 &  -1.0 & 5507.7 &  12
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline 
-Global & 2514 & 1554 &  -2.3 & 179.1 &   1.8 &   5.0 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1205 & 773 &  -2.3 & 287.9 &   2.0 &   5.0 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1111 & 651 &  -2.2 &   3.3 &   1.6 &   2.8 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 176 & 111 &  -1.2 &   2.1 &   1.5 &   1.1 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 19 &  -0.9 & 4517.2 &  11.1 &   5.0 \\
+Global & 2733 & 1629 &  -2.1 & 170.3 &   1.7 &   5.0 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1328 & 818 &  -2.1 & 265.2 &   1.9 &   4.7 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1195 & 681 &  -2.1 &   6.1 &   1.5 &   3.2 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 187 & 112 &  -1.2 &   2.2 &   1.7 &   1.2 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 23 & 18 &  -1.0 & 4588.9 &   9.6 &   5.0 \\
             \end{tabular}
             \caption{\capkc vs Approxmc7.
 	}
@@ -280,11 +280,11 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 19 &  -0.9 & 4517.2 &  11
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline 
-Global & 421 & 182 &  -2.2 & 250.3 &   0.6 &   5.0 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 207 & 92 &  -2.2 & 506.3 &   0.6 &   5.0 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 194 & 74 &  -2.2 &   2.7 &   0.5 &   2.2 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 16 & 12 &  -0.9 &   2.8 &   2.1 &   0.7 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 4 & 4 &   0.0 &   5.6 &   6.6 &   0.9 \\
+Global & 294 & 2 &  -2.1 &   1.9 &   0.0 &   2.7 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 143 & 2 &  -2.1 &   3.8 &   0.0 &   2.7 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 149 & 0 &  -2.1 &   0.2 &   0.0 &  -0.1 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 1 & 0 &  -1.2 &   0.1 &   0.1 &  -1.2 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 1 & 0 &  -0.3 &   0.5 &   0.5 &  -0.3 \\
             \end{tabular}
             \caption{\capkc vs Approxmc7.
 	}

@@ -15,11 +15,11 @@ divkc = pd.read_csv("csv/divkc.csv", skipinitialspace = True, index_col = 'file'
 d4 = pd.read_csv("csv/d4.ddnnf.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
 cls = pd.read_csv("csv/cls.csv", skipinitialspace = True, index_col = 'file')
 ck = pd.read_csv("csv/ck.comp.d19.csv", skipinitialspace = True, index_col = 'file', dtype = {'ck_mc': str, 'd4d_mc': str})
-ck_amc = pd.read_csv("csv/ck.appmc.wi.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str, 'ck_amc_y': str, 'ck_amc_yl': str, 'ck_amc_yh': str})
+ck_amc = pd.read_csv("csv/ck.appmc.wi.community.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str, 'ck_amc_y': str, 'ck_amc_yl': str, 'ck_amc_yh': str})
 amc = pd.read_csv("csv/approxmc_e0.8d0.1.run.csv", skipinitialspace = True, index_col = 'file', dtype = {'amc': str})
 
 divkcn4 = pd.read_csv("csv/divkc.appmc.n4.csv", skipinitialspace = True, index_col = 'file', dtype = {'divkc_pmc': str, 'divkc_umc': str})
-ckn4 = pd.read_csv("csv/ck.amc.n4.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
+ckn4 = pd.read_csv("csv/ck.amc.n4.community.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
 
 amc = amc[amc.state == "done"]
 amc.dropna(inplace = True)
@@ -484,12 +484,7 @@ for x in total.index:
 
                 nb += 1
 
-                # if pm > 0:
-                #if (yl <= tm) and (yh >= tm):
-                if yh <= pm:
-                    # resl.append((min(yh, pm) - max(yl, 0)) / (pm - 0))
-                    resl.append((yh - yl) / (pm))
-                    # resl.append(yl)
+                resl.append((yh - yl) / (pm))
 
     if nb > 0:
         #nlow /= nb
@@ -506,13 +501,12 @@ for x in total.index:
 
         print(f"{vsub} & {nb} & {nhigh:5.3f} & {med} & {ma} \\\\")
     else:
-        print(f"{vsub} & {nb} & & & & & \\\\")
+        print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
     \caption{Experimental results comparing the bounds obtained with \capkc.
 	Column \#F indicates with how many formulae the statistics have been computed.
-	The last two columns represent the observed median and maximum values of the ratio $r_c = \dfrac{Y_h - Y_l}{|R_{G_U}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
-	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{capkc:tab:appmc}.
+    The last two columns represent the observed median and maximum values of the relative confidence-interval width $r_c = \dfrac{Y_h - Y_l}{|R_{G_U}|}$.
 	}
 	\label{capkc:tab:coverage}
 \end{table}
@@ -522,8 +516,8 @@ print(r"""            \end{tabular}
 
 print(r"""\begin{table}[h!]
 	\centering
-		\begin{tabular}{l|c|c|c|c}
-			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & \#F$_{\textit{\capkcamc}}$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
             \hline """)
 
 for x in total.index:
@@ -544,6 +538,7 @@ for x in total.index:
     nb = 0
     nappmc = 0
     ndivkc = 0
+    nbf_ck = 0
     nck = 0
 
     resl = []
@@ -563,16 +558,19 @@ for x in total.index:
 
             nappmc += (yamc <= high) and (low <= yamc)
             ndivkc += (ydivkc <= high) and (low <= ydivkc)
-            nck += (yck <= high) and (low <= yck)
+            if (tm != int(lck_amc.ck_umc[f])):
+                nbf_ck += 1
+                nck += (yck <= high) and (low <= yck)
 
+    if nbf_ck > 0:
+        nck /= nbf_ck
     if nb > 0:
         nappmc /= nb
         ndivkc /= nb
-        nck /= nb
 
-        print(f"{vsub} & {nb} & {nappmc:5.3f} & {ndivkc:5.3f} & {nck:5.3f} \\\\")
+        print(f"{vsub} & {nb} & {nappmc:5.3f} & {ndivkc:5.3f} & {nbf_ck} & {nck:5.3f} \\\\")
     else:
-        print(f"{vsub} & {nb} & & & \\\\")
+        print(f"{vsub} & {nb} & & & & \\\\")
 
 print(r"""            \end{tabular}
             \caption{\capkc.
@@ -699,7 +697,7 @@ for x in total.index:
     ratio = []
 
     for f in lck.index:
-        if f in lamc.index and (not f in mc.index or int(lck.ck_umc[f]) != int(mc.mc[f])):
+        if f in lamc.index and ((not f in mc.index) or int(lck.ck_umc[f]) != int(mc.mc[f])):
             nb += 1
 
             dtime = lck.rtime[f]
