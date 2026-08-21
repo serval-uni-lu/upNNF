@@ -517,7 +517,7 @@ print(r"""            \end{tabular}
 print(r"""\begin{table}[h!]
 	\centering
 		\begin{tabular}{l|c|c|c|c|c}
-			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & \#F$_{\textit{\capkcamc}}$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
             \hline """)
 
 for x in total.index:
@@ -538,7 +538,6 @@ for x in total.index:
     nb = 0
     nappmc = 0
     ndivkc = 0
-    nbf_ck = 0
     nck = 0
 
     resl = []
@@ -558,24 +557,88 @@ for x in total.index:
 
             nappmc += (yamc <= high) and (low <= yamc)
             ndivkc += (ydivkc <= high) and (low <= ydivkc)
-            if (tm != int(lck_amc.ck_umc[f])):
-                nbf_ck += 1
-                nck += (yck <= high) and (low <= yck)
+            nck += (yck <= high) and (low <= yck)
 
-    if nbf_ck > 0:
-        nck /= nbf_ck
     if nb > 0:
         nappmc /= nb
         ndivkc /= nb
+        nck /= nb
 
-        print(f"{vsub} & {nb} & {nappmc:5.3f} & {ndivkc:5.3f} & {nbf_ck} & {nck:5.3f} \\\\")
+        print(f"{vsub} & {nb} & {nappmc:5.3f} & {ndivkc:5.3f} & {nck:5.3f} \\\\")
     else:
         print(f"{vsub} & {nb} & & & & \\\\")
 
 print(r"""            \end{tabular}
-            \caption{\capkc.
+            \caption{Experimental results comparing the accuracy of \divkcamc and \capkcamc with \approxmc7.
+		Column \#F indicates with how many formulae the statistics have been computed.
+		Column $l \leq Y_{A} \leq h$ indicates how often the model count returned by $A$ is within the indicated bounds, with $l = \dfrac{|R_F|}{1.2}$ and $h = 1.2 \times |R_F|$.
 	}
-	%\label{divkc:tab:coverage}
+    \label{divkc:tab:appmc:acc}
+\end{table}
+
+""")
+
+print(r"""\begin{table}[h!]
+	\centering
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+            \hline """)
+
+for x in total.index:
+    sub = total['folder'][x]
+    nbf = total['nbf'][x]
+    vsub = total['map'][x]
+
+    ldivkc = divkc[divkc.index.str.contains(sub)]
+    ldivkc = ldivkc[ldivkc.ok]
+
+    lck_amc = ck_amc[ck_amc.index.str.contains(sub)]
+    lck_amc = lck_amc[lck_amc.ok]
+
+    lamc = amc[amc.index.str.contains(sub)]
+
+    epsilon = 1.2
+
+    nb = 0
+    nappmc = 0
+    ndivkc = 0
+    nck = 0
+
+    resl = []
+
+    for f in lck_amc.index:
+        if f in mc.index and f in lamc.index and f in ldivkc.index and int(mc.mc[f]) != int(lck_amc.ck_umc[f]):
+            ydivkc = mp.mpf(ldivkc.appmc_y[f])
+            yck = mp.mpf(lck_amc.ck_amc_y[f])
+            yamc = mp.mpf(lamc.amc[f])
+
+            tm = int(mc.mc[f])
+
+            high = epsilon * mp.mpf(tm)
+            low = mp.mpf(tm) / epsilon
+
+            nb += 1
+
+            nappmc += (yamc <= high) and (low <= yamc)
+            ndivkc += (ydivkc <= high) and (low <= ydivkc)
+            nck += (yck <= high) and (low <= yck)
+
+    if nb > 0:
+        nappmc /= nb
+        ndivkc /= nb
+        nck /= nb
+
+        print(f"{vsub} & {nb} & {nappmc:5.3f} & {ndivkc:5.3f} & {nck:5.3f} \\\\")
+    else:
+        print(f"{vsub} & {nb} & & & & \\\\")
+
+print(r"""            \end{tabular}
+            \caption{Experimental results comparing the accuracy of \divkcamc and \capkcamc with \approxmc7.
+		Column \#F indicates with how many formulae the statistics have been computed.
+		Column $l \leq Y_{A} \leq h$ indicates how often the model count returned by $A$ is within the indicated bounds, with $l = \dfrac{|R_F|}{1.2}$ and $h = 1.2 \times |R_F|$.
+        We only consider formulae for which $|R_{G_U}| \neq |R_F|$, thereby excluding cases where $\capkc$ returns $G_U = F$ and the model count can be obtained directly from $G_U$.
+	}
+    \label{divkc:tab:appmc:acc:filter}
 \end{table}
 
 """)

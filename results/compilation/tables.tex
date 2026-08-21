@@ -226,17 +226,39 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 2 & 1.000 & 0.00981 & 0.0155 \
 \begin{table}[h!]
 	\centering
 		\begin{tabular}{l|c|c|c|c|c}
-			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & \#F$_{\textit{\capkcamc}}$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
             \hline 
-Global & 2713 & 0.973 & 0.871 & 298 & 0.826 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1329 & 1.000 & 0.889 & 148 & 0.824 \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1177 & 0.964 & 0.847 & 147 & 0.830 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 185 & 0.838 & 0.892 & 3 & 0.667 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 1.000 & 0.955 & 0 & 0.000 \\
+Global & 2713 & 0.973 & 0.871 & 0.981 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1329 & 1.000 & 0.889 & 0.980 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1177 & 0.964 & 0.847 & 0.979 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 185 & 0.838 & 0.892 & 0.995 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 1.000 & 0.955 & 1.000 \\
             \end{tabular}
-            \caption{\capkc.
+            \caption{Experimental results comparing the accuracy of \divkcamc and \capkcamc with \approxmc7.
+		Column \#F indicates with how many formulae the statistics have been computed.
+		Column $l \leq Y_{A} \leq h$ indicates how often the model count returned by $A$ is within the indicated bounds, with $l = \dfrac{|R_F|}{1.2}$ and $h = 1.2 \times |R_F|$.
 	}
-	%\label{divkc:tab:coverage}
+    \label{divkc:tab:appmc:acc}
+\end{table}
+
+
+\begin{table}[h!]
+	\centering
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+            \hline 
+Global & 298 & 0.997 & 0.500 & 0.826 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 148 & 1.000 & 0.486 & 0.824 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 147 & 0.993 & 0.503 & 0.830 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 3 & 1.000 & 1.000 & 0.667 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 0 & & & & \\
+            \end{tabular}
+            \caption{Experimental results comparing the accuracy of \divkcamc and \capkcamc with \approxmc7.
+		Column \#F indicates with how many formulae the statistics have been computed.
+		Column $l \leq Y_{A} \leq h$ indicates how often the model count returned by $A$ is within the indicated bounds, with $l = \dfrac{|R_F|}{1.2}$ and $h = 1.2 \times |R_F|$.
+        We only consider formulae for which $|R_{G_U}| \neq |R_F|$, thereby excluding cases where $\capkc$ returns $G_U = F$ and the model count can be obtained directly from $G_U$.
+	}
+    \label{divkc:tab:appmc:acc:filter}
 \end{table}
 
 
