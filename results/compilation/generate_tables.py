@@ -684,9 +684,11 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
-            \caption{\divkc vs Approxmc7.
+            \caption{Experimental results comparing the runtime of \divkcamc with \approxmc7 for 20 runs.
+		Column \#F indicates the number of formulae over which the statistics were computed, and column \#\divkcamc shows how often \divkcamc was faster than \approxmc7.
+		The remaining columns report how much faster \divkcamc was, based on the logarithm of the minimum, the mean, the median, and the logarithm of the maximum of the ratio: \approxmc7 execution time divided by \divkcamc execution time.
 	}
-	%\label{divkc:tab:coverage}
+    \label{divkc:tab:appmc:run}
 \end{table}
 
 """)
@@ -732,9 +734,11 @@ for x in total.index:
         print(f"{vsub} & {nb} & & & \\\\")
 
 print(r"""            \end{tabular}
-            \caption{\capkc vs Approxmc7.
+            \caption{Experimental results comparing the runtime of \capkcamc with \approxmc7 for 20 runs.
+		Column \#F indicates the number of formulae over which the statistics were computed, and column \#\capkcamc shows how often \capkcamc was faster than \approxmc7.
+		The remaining columns report how much faster \capkcamc was, based on the logarithm of the minimum, the mean, the median, and the logarithm of the maximum of the ratio: \approxmc7 execution time divided by \capkcamc execution time.
 	}
-	%\label{divkc:tab:coverage}
+    \label{capkc:tab:appmc:run}
 \end{table}
 
 """)
