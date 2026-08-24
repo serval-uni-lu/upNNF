@@ -21,8 +21,12 @@ amc = pd.read_csv("csv/approxmc_e0.8d0.1.run.csv", skipinitialspace = True, inde
 divkcn4 = pd.read_csv("csv/divkc.appmc.n4.csv", skipinitialspace = True, index_col = 'file', dtype = {'divkc_pmc': str, 'divkc_umc': str})
 ckn4 = pd.read_csv("csv/ck.amc.n4.community.csv", skipinitialspace = True, index_col = 'file', dtype = {'mc': str})
 
-amc = amc[amc.state == "done"]
-amc.dropna(inplace = True)
+# amc = amc[amc.state == "done"]
+# amc.dropna(inplace = True)
+
+amc["ok"] = (amc.r1_status == "done")
+amc["okn4"] = (amc.r1_status == "done") & (amc.r2_status == "done") & (amc.r3_status == "done") & (amc.r4_status == "done")
+amc["amc"] = amc.r1_amc
 
 divkc["ok"] = (divkc.splitter_status == "done") & (divkc.proj_status == "done") & (divkc.pd4_status == "done") & (divkc.ud4_status == "done") & (divkc.appmc_status == "done")
 ck["ck_ok"] = (ck.ck_status == "done") & (ck.ck_d4_status == "done") & (ck.ck_s_status == "done") & ((ck.ck_time + ck.ck_d4_time + ck.ck_s_time) <= (5 * 3600))
@@ -35,7 +39,7 @@ divkcn4["ok"] = (divkcn4.divkc_splitter_status == "done") & (divkcn4.divkc_proj_
 ckn4["ok"] = (ckn4.ck_status == "done") & (ckn4.ck_d4_status == "done") & (ckn4.ck_amc1_status == "done") & (ckn4.ck_amc2_status == "done") & (ckn4.ck_amc3_status == "done") & (ckn4.ck_amc4_status == "done")
 
 
-amc["rtime"] = amc.time * 5
+amc["rtime"] = (amc.r1_time + amc.r2_time + amc.r3_time + amc.r4_time) * 5
 divkcn4["rtime"] = (divkcn4.divkc_splitter_time + divkcn4.divkc_proj_time + divkcn4.divkc_d4p_time + divkcn4.divkc_d4u_time) + (divkcn4.divkc_amc1_time + divkcn4.divkc_amc2_time + divkcn4.divkc_amc3_time + divkcn4.divkc_amc4_time) * 5
 ckn4["rtime"] = (ckn4.ck_time + ckn4.ck_d4_time) + (ckn4.ck_amc1_time + ckn4.ck_amc2_time + ckn4.ck_amc3_time + ckn4.ck_amc4_time) * 5
 
@@ -532,6 +536,7 @@ for x in total.index:
     lck_amc = lck_amc[lck_amc.ok]
 
     lamc = amc[amc.index.str.contains(sub)]
+    lamc = lamc[lamc.ok]
 
     epsilon = 1.2
 
@@ -596,6 +601,7 @@ for x in total.index:
     lck_amc = lck_amc[lck_amc.ok]
 
     lamc = amc[amc.index.str.contains(sub)]
+    lamc = lamc[lamc.ok]
 
     epsilon = 1.2
 
@@ -658,6 +664,7 @@ for x in total.index:
     ldivkc = ldivkc[ldivkc.ok]
 
     lamc = amc[amc.index.str.contains(sub)]
+    lamc = lamc[lamc.okn4]
 
     nb = 0
     ndivkc = 0
@@ -708,6 +715,7 @@ for x in total.index:
     lck = lck[lck.ok]
 
     lamc = amc[amc.index.str.contains(sub)]
+    lamc = lamc[lamc.okn4]
 
     nb = 0
     nck = 0
@@ -758,6 +766,7 @@ for x in total.index:
     lck = lck[lck.ok]
 
     lamc = amc[amc.index.str.contains(sub)]
+    lamc = lamc[lamc.okn4]
 
     nb = 0
     nck = 0
