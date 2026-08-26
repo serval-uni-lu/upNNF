@@ -299,18 +299,18 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 270 & 0.196 & 0.448 & 0.093 & 
 		\begin{tabular}{l|c|c|c|c}
 			Dataset & \#F & $Y_h \leq |R_{G_U}|$ & \textit{median}($r_c$) & \textit{max}($r_c$) \\ 
             \hline 
-Global & 334 & 0.994 & 0.00812 & 0.0257 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 175 & 0.994 & 0.00753 & 0.0257 \\
+Global & 334 & 0.994 & 0.00794 & 0.0257 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 175 & 0.994 & 0.0072 & 0.0257 \\
 $\hookrightarrow \hookrightarrow$ Bayesian Network & 143 & 1.000 & 0.00915 & 0.0257 \\
 $\hookrightarrow \hookrightarrow$ BMC & 0 & & & \\
 $\hookrightarrow \hookrightarrow$ Circuit & 2 & 1.000 & 0.00757 & 0.0103 \\
-$\hookrightarrow \hookrightarrow$ Configuration & 8 & 0.875 & 0.00996 & 0.0256 \\
+$\hookrightarrow \hookrightarrow$ Configuration & 8 & 0.875 & 0.00654 & 0.0256 \\
 $\hookrightarrow \hookrightarrow$ Handmade & 2 & 1.000 & 0.0135 & 0.0231 \\
 $\hookrightarrow \hookrightarrow$ Planning & 18 & 1.000 & 0.00164 & 0.0257 \\
 $\hookrightarrow \hookrightarrow$ QIF & 1 & 1.000 & 0.0257 & 0.0257 \\
 $\hookrightarrow \hookrightarrow$ Random & 1 & 1.000 & 0.00422 & 0.00422 \\
 $\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 153 & 0.993 & 0.00861 & 0.0257 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 153 & 0.993 & 0.00837 & 0.0257 \\
 $\hookrightarrow$ Plazar \cite{Plazar2019} & 4 & 1.000 & 0.00684 & 0.0257 \\
 $\hookrightarrow \hookrightarrow$ Blasted Real & 3 & 1.000 & 0.00339 & 0.0257 \\
 $\hookrightarrow \hookrightarrow$ Feature Models & 0 & & & \\
@@ -322,8 +322,7 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 2 & 1.000 & 0.00981 & 0.0155 \
             \end{tabular}
     \caption{Experimental results comparing the bounds obtained with \capkc.
 	Column \#F indicates with how many formulae the statistics have been computed.
-	The last two columns represent the observed median and maximum values of the ratio $r_c = \dfrac{Y_h - Y_l}{|R_{G_U}|}$, which was calculated exclusively if $Y_l \leq |R_F| \leq Y_h$.
-	The number of formulae on which the last two columns are computed can easily be obtained by multiplying the \#F column with the 'Coverage' column in Table~\ref{capkc:tab:appmc}.
+    The last two columns represent the observed median and maximum values of the relative confidence-interval width $r_c = \dfrac{Y_h - Y_l}{|R_{G_U}|}$.
 	}
 	\label{capkc:tab:coverage}
 \end{table}
@@ -331,33 +330,70 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 2 & 1.000 & 0.00981 & 0.0155 \
 
 \begin{table}[h!]
 	\centering
-		\begin{tabular}{l|c|c|c|c}
+		\begin{tabular}{l|c|c|c|c|c}
 			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
             \hline 
-Global & 2713 & 0.973 & 0.871 & 0.981 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1329 & 1.000 & 0.889 & 0.980 \\
+Global & 2814 & 0.939 & 0.875 & 0.982 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1353 & 0.982 & 0.891 & 0.981 \\
 $\hookrightarrow \hookrightarrow$ Bayesian Network & 922 & 1.000 & 0.851 & 0.975 \\
 $\hookrightarrow \hookrightarrow$ BMC & 3 & 1.000 & 1.000 & 1.000 \\
-$\hookrightarrow \hookrightarrow$ Circuit & 44 & 1.000 & 0.864 & 1.000 \\
+$\hookrightarrow \hookrightarrow$ Circuit & 48 & 0.917 & 0.875 & 1.000 \\
 $\hookrightarrow \hookrightarrow$ Configuration & 16 & 1.000 & 0.875 & 1.000 \\
-$\hookrightarrow \hookrightarrow$ Handmade & 12 & 1.000 & 1.000 & 1.000 \\
+$\hookrightarrow \hookrightarrow$ Handmade & 32 & 0.375 & 1.000 & 1.000 \\
 $\hookrightarrow \hookrightarrow$ Planning & 319 & 1.000 & 0.994 & 0.991 \\
 $\hookrightarrow \hookrightarrow$ QIF & 5 & 1.000 & 0.800 & 1.000 \\
 $\hookrightarrow \hookrightarrow$ Random & 8 & 1.000 & 1.000 & 1.000 \\
-$\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1177 & 0.964 & 0.847 & 0.979 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 185 & 0.838 & 0.892 & 0.995 \\
+$\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & & \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1186 & 0.957 & 0.848 & 0.979 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 253 & 0.613 & 0.905 & 0.996 \\
 $\hookrightarrow \hookrightarrow$ Blasted Real & 149 & 1.000 & 0.886 & 0.993 \\
 $\hookrightarrow \hookrightarrow$ Feature Models & 6 & 1.000 & 1.000 & 1.000 \\
-$\hookrightarrow \hookrightarrow$ V15 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ V3 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ V7 & 0 & & & \\
+$\hookrightarrow \hookrightarrow$ V15 & 23 & 0.000 & 0.913 & 1.000 \\
+$\hookrightarrow \hookrightarrow$ V3 & 23 & 0.000 & 0.957 & 1.000 \\
+$\hookrightarrow \hookrightarrow$ V7 & 22 & 0.000 & 0.955 & 1.000 \\
 $\hookrightarrow \hookrightarrow$ unsorted & 30 & 0.000 & 0.900 & 1.000 \\
 $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 1.000 & 0.955 & 1.000 \\
             \end{tabular}
-            \caption{\capkc.
+            \caption{Experimental results comparing the accuracy of \divkcamc and \capkcamc with \approxmc7.
+		Column \#F indicates with how many formulae the statistics have been computed.
+		Column $l \leq Y_{A} \leq h$ indicates how often the model count returned by $A$ is within the indicated bounds, with $l = \dfrac{|R_F|}{1.2}$ and $h = 1.2 \times |R_F|$.
 	}
-	%\label{divkc:tab:coverage}
+    \label{divkc:tab:appmc:acc}
+\end{table}
+
+
+\begin{table}[h!]
+	\centering
+		\begin{tabular}{l|c|c|c|c|c}
+			Dataset & \#F & $l \leq Y_{\textit{\approxmc}} \leq h$ & $l \leq Y_{\textit{\divkcamc}} \leq h$ & $l \leq Y_{\textit{\capkcamc}} \leq h$ \\ 
+            \hline 
+Global & 298 & 0.997 & 0.500 & 0.826 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 148 & 1.000 & 0.486 & 0.824 \\
+$\hookrightarrow \hookrightarrow$ Bayesian Network & 138 & 1.000 & 0.449 & 0.833 \\
+$\hookrightarrow \hookrightarrow$ BMC & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ Circuit & 2 & 1.000 & 1.000 & 1.000 \\
+$\hookrightarrow \hookrightarrow$ Configuration & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ Handmade & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ Planning & 7 & 1.000 & 1.000 & 0.571 \\
+$\hookrightarrow \hookrightarrow$ QIF & 1 & 1.000 & 1.000 & 1.000 \\
+$\hookrightarrow \hookrightarrow$ Random & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & & \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 147 & 0.993 & 0.503 & 0.830 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 3 & 1.000 & 1.000 & 0.667 \\
+$\hookrightarrow \hookrightarrow$ Blasted Real & 3 & 1.000 & 1.000 & 0.667 \\
+$\hookrightarrow \hookrightarrow$ Feature Models & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ V15 & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ V3 & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ V7 & 0 & & & & \\
+$\hookrightarrow \hookrightarrow$ unsorted & 0 & & & & \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 0 & & & & \\
+            \end{tabular}
+            \caption{Experimental results comparing the accuracy of \divkcamc and \capkcamc with \approxmc7.
+		Column \#F indicates with how many formulae the statistics have been computed.
+		Column $l \leq Y_{A} \leq h$ indicates how often the model count returned by $A$ is within the indicated bounds, with $l = \dfrac{|R_F|}{1.2}$ and $h = 1.2 \times |R_F|$.
+        We only consider formulae for which $|R_{G_U}| \neq |R_F|$, thereby excluding cases where $\capkc$ returns $G_U = F$ and the model count can be obtained directly from $G_U$.
+	}
+    \label{divkc:tab:appmc:acc:filter}
 \end{table}
 
 
@@ -366,30 +402,32 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 1.000 & 0.955 & 1.000 \\
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\divkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline 
-Global & 3188 & 2129 &  -3.7 & 160.7 &   1.9 &   5.1 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1599 & 1160 &  -3.0 & 239.1 &   2.1 &   4.9 \\
-$\hookrightarrow \hookrightarrow$ Bayesian Network & 1051 & 708 &  -2.7 &   7.9 &   1.9 &   3.8 \\
-$\hookrightarrow \hookrightarrow$ BMC & 4 & 0 &  -1.5 &   0.3 &   0.3 &  -0.3 \\
-$\hookrightarrow \hookrightarrow$ Circuit & 52 & 28 &  -2.9 &   1.7 &   1.4 &   1.2 \\
-$\hookrightarrow \hookrightarrow$ Configuration & 16 & 16 &   0.5 & 5692.8 &  50.7 &   4.9 \\
-$\hookrightarrow \hookrightarrow$ Handmade & 15 & 14 &  -0.2 & 220.0 &  11.2 &   3.4 \\
-$\hookrightarrow \hookrightarrow$ Planning & 352 & 288 &  -3.0 & 749.4 &   4.7 &   4.6 \\
-$\hookrightarrow \hookrightarrow$ QIF & 7 & 5 &  -0.6 &   2.4 &   3.0 &   0.6 \\
-$\hookrightarrow \hookrightarrow$ Random & 102 & 101 &  -0.4 & 155.1 & 101.9 &   2.7 \\
+Global & 3291 & 2122 &  -5.4 & 153.0 &   1.8 &   5.1 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1623 & 1156 &  -2.9 & 224.2 &   2.1 &   4.9 \\
+$\hookrightarrow \hookrightarrow$ Bayesian Network & 1051 & 705 &  -2.7 &   8.1 &   1.9 &   3.8 \\
+$\hookrightarrow \hookrightarrow$ BMC & 4 & 0 &  -1.5 &   0.4 &   0.4 &  -0.2 \\
+$\hookrightarrow \hookrightarrow$ Circuit & 56 & 28 &  -2.9 &   1.6 &   1.0 &   1.2 \\
+$\hookrightarrow \hookrightarrow$ Configuration & 16 & 16 &   0.5 & 5251.7 &  50.5 &   4.9 \\
+$\hookrightarrow \hookrightarrow$ Handmade & 35 & 14 &  -1.8 &  95.3 &   0.1 &   3.4 \\
+$\hookrightarrow \hookrightarrow$ Planning & 352 & 287 &  -2.9 & 729.0 &   4.6 &   4.6 \\
+$\hookrightarrow \hookrightarrow$ QIF & 7 & 5 &  -0.6 &   2.4 &   2.9 &   0.6 \\
+$\hookrightarrow \hookrightarrow$ Random & 102 & 101 &  -0.4 & 111.6 &  36.5 &   2.6 \\
 $\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1349 & 855 &  -3.6 &   6.2 &   1.8 &   3.6 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 218 & 97 &  -3.7 &   1.3 &   0.9 &   1.2 \\
-$\hookrightarrow \hookrightarrow$ Blasted Real & 177 & 85 &  -3.3 &   1.2 &   0.9 &   0.7 \\
-$\hookrightarrow \hookrightarrow$ Feature Models & 6 & 4 &  -0.3 &   4.7 &   3.1 &   1.2 \\
-$\hookrightarrow \hookrightarrow$ V15 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ V3 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ V7 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ unsorted & 35 & 8 &  -3.7 &   1.1 &   0.3 &   1.0 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 17 &  -1.0 & 5507.7 &  12.6 &   5.1 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1358 & 851 &  -3.5 &   6.2 &   1.7 &   3.6 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 288 & 98 &  -5.4 &   1.0 &   0.3 &   1.2 \\
+$\hookrightarrow \hookrightarrow$ Blasted Real & 177 & 86 &  -3.2 &   1.2 &   0.9 &   0.7 \\
+$\hookrightarrow \hookrightarrow$ Feature Models & 6 & 4 &  -0.4 &   4.7 &   3.1 &   1.2 \\
+$\hookrightarrow \hookrightarrow$ V15 & 23 & 0 &  -3.3 &   0.0 &   0.0 &  -1.2 \\
+$\hookrightarrow \hookrightarrow$ V3 & 24 & 0 &  -5.4 &   0.0 &   0.0 &  -1.2 \\
+$\hookrightarrow \hookrightarrow$ V7 & 23 & 0 &  -3.0 &   0.0 &   0.0 &  -1.1 \\
+$\hookrightarrow \hookrightarrow$ unsorted & 35 & 8 &  -3.6 &   1.1 &   0.3 &   1.0 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 17 &  -1.2 & 5954.6 &  12.6 &   5.1 \\
             \end{tabular}
-            \caption{\divkc vs Approxmc7.
+            \caption{Experimental results comparing the runtime of \divkcamc with \approxmc7 for 20 runs.
+		Column \#F indicates the number of formulae over which the statistics were computed, and column \#\divkcamc shows how often \divkcamc was faster than \approxmc7.
+		The remaining columns report how much faster \divkcamc was, based on the logarithm of the minimum, the mean, the median, and the logarithm of the maximum of the ratio: \approxmc7 execution time divided by \divkcamc execution time.
 	}
-	%\label{divkc:tab:coverage}
+    \label{divkc:tab:appmc:run}
 \end{table}
 
 
@@ -398,30 +436,32 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 17 &  -1.0 & 5507.7 &  12
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline 
-Global & 2514 & 1554 &  -2.3 & 179.1 &   1.8 &   5.0 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 1205 & 773 &  -2.3 & 287.9 &   2.0 &   5.0 \\
-$\hookrightarrow \hookrightarrow$ Bayesian Network & 865 & 507 &  -2.2 &  18.6 &   1.7 &   4.2 \\
-$\hookrightarrow \hookrightarrow$ BMC & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ Circuit & 40 & 25 &  -1.4 &   1.8 &   1.7 &   0.8 \\
-$\hookrightarrow \hookrightarrow$ Configuration & 16 & 16 &   0.5 & 6890.2 & 301.7 &   5.0 \\
-$\hookrightarrow \hookrightarrow$ Handmade & 4 & 0 &  -1.1 &   0.2 &   0.1 &  -0.4 \\
-$\hookrightarrow \hookrightarrow$ Planning & 274 & 223 &  -1.4 & 804.9 &   6.0 &   4.4 \\
-$\hookrightarrow \hookrightarrow$ QIF & 5 & 2 &  -1.0 &   1.4 &   0.1 &   0.6 \\
-$\hookrightarrow \hookrightarrow$ Random & 1 & 0 &  -2.3 &   0.0 &   0.0 &  -2.3 \\
+Global & 2838 & 1629 &  -3.5 & 162.7 &   1.6 &   5.0 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 1352 & 820 &  -2.6 & 251.6 &   1.8 &   4.7 \\
+$\hookrightarrow \hookrightarrow$ Bayesian Network & 924 & 512 &  -2.1 &  17.9 &   1.4 &   4.2 \\
+$\hookrightarrow \hookrightarrow$ BMC & 2 & 1 &  -0.8 &   1.4 &   1.4 &   0.4 \\
+$\hookrightarrow \hookrightarrow$ Circuit & 47 & 28 &  -1.8 &   2.0 &   1.7 &   1.0 \\
+$\hookrightarrow \hookrightarrow$ Configuration & 16 & 16 &   0.5 & 3947.4 & 377.9 &   4.7 \\
+$\hookrightarrow \hookrightarrow$ Handmade & 33 & 9 &  -2.6 &   2.0 &   0.0 &   1.3 \\
+$\hookrightarrow \hookrightarrow$ Planning & 318 & 248 &  -1.3 & 818.6 &   4.9 &   4.7 \\
+$\hookrightarrow \hookrightarrow$ QIF & 5 & 2 &  -0.9 &   1.4 &   0.2 &   0.6 \\
+$\hookrightarrow \hookrightarrow$ Random & 7 & 4 &  -2.0 &   1.1 &   1.0 &   0.4 \\
 $\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1111 & 651 &  -2.2 &   3.3 &   1.6 &   2.8 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 176 & 111 &  -1.2 &   2.1 &   1.5 &   1.1 \\
-$\hookrightarrow \hookrightarrow$ Blasted Real & 139 & 96 &  -1.2 &   2.2 &   1.7 &   1.1 \\
-$\hookrightarrow \hookrightarrow$ Feature Models & 6 & 5 &  -0.5 &   4.6 &   3.7 &   1.1 \\
-$\hookrightarrow \hookrightarrow$ V15 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ V3 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ V7 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ unsorted & 31 & 10 &  -1.1 &   1.0 &   0.3 &   0.8 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 19 &  -0.9 & 4517.2 &  11.1 &   5.0 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 1204 & 679 &  -2.1 &   6.1 &   1.5 &   3.2 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 259 & 111 &  -3.5 &   1.5 &   0.7 &   1.2 \\
+$\hookrightarrow \hookrightarrow$ Blasted Real & 148 & 91 &  -1.2 &   2.2 &   1.7 &   1.2 \\
+$\hookrightarrow \hookrightarrow$ Feature Models & 6 & 5 &  -0.5 &   4.9 &   3.6 &   1.1 \\
+$\hookrightarrow \hookrightarrow$ V15 & 24 & 0 &  -3.5 &   0.0 &   0.0 &  -1.3 \\
+$\hookrightarrow \hookrightarrow$ V3 & 24 & 0 &  -2.8 &   0.0 &   0.0 &  -1.3 \\
+$\hookrightarrow \hookrightarrow$ V7 & 24 & 0 &  -3.2 &   0.0 &   0.0 &  -1.0 \\
+$\hookrightarrow \hookrightarrow$ unsorted & 33 & 15 &  -1.1 &   1.5 &   0.9 &   0.8 \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 23 & 19 &  -1.2 & 4948.0 &  10.1 &   5.0 \\
             \end{tabular}
-            \caption{\capkc vs Approxmc7.
+            \caption{Experimental results comparing the runtime of \capkcamc with \approxmc7 for 20 runs.
+		Column \#F indicates the number of formulae over which the statistics were computed, and column \#\capkcamc shows how often \capkcamc was faster than \approxmc7.
+		The remaining columns report how much faster \capkcamc was, based on the logarithm of the minimum, the mean, the median, and the logarithm of the maximum of the ratio: \approxmc7 execution time divided by \capkcamc execution time.
 	}
-	%\label{divkc:tab:coverage}
+    \label{capkc:tab:appmc:run}
 \end{table}
 
 
@@ -430,26 +470,26 @@ $\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 22 & 19 &  -0.9 & 4517.2 &  11
 		\begin{tabular}{l|c|c|c|c|c|c}
             Dataset & \#F & \#\capkcamc & $\textit{log}_{10}(\textit{min})$ & \textit{mean} & \textit{median} & $\textit{log}_{10}(\textit{max})$ \\
             \hline 
-Global & 421 & 182 &  -2.2 & 250.3 &   0.6 &   5.0 \\
-$\hookrightarrow$ Lagniez \cite{D4} & 207 & 92 &  -2.2 & 506.3 &   0.6 &   5.0 \\
-$\hookrightarrow \hookrightarrow$ Bayesian Network & 166 & 58 &  -2.2 &   1.2 &   0.4 &   0.9 \\
+Global & 294 & 2 &  -2.1 &   1.9 &   0.0 &   2.7 \\
+$\hookrightarrow$ Lagniez \cite{D4} & 143 & 2 &  -2.1 &   3.8 &   0.0 &   2.7 \\
+$\hookrightarrow \hookrightarrow$ Bayesian Network & 136 & 0 &  -2.1 &   0.2 &   0.0 &  -0.1 \\
 $\hookrightarrow \hookrightarrow$ BMC & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ Circuit & 2 & 2 &   0.4 &   2.5 &   2.5 &   0.4 \\
-$\hookrightarrow \hookrightarrow$ Configuration & 2 & 2 &   3.6 & 49836.7 & 49836.7 &   5.0 \\
+$\hookrightarrow \hookrightarrow$ Circuit & 1 & 0 &  -1.8 &   0.0 &   0.0 &  -1.8 \\
+$\hookrightarrow \hookrightarrow$ Configuration & 0 & & & \\
 $\hookrightarrow \hookrightarrow$ Handmade & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ Planning & 35 & 29 &  -1.0 & 140.5 &   3.3 &   3.5 \\
-$\hookrightarrow \hookrightarrow$ QIF & 2 & 1 &  -0.8 &   1.9 &   1.9 &   0.6 \\
+$\hookrightarrow \hookrightarrow$ Planning & 5 & 2 &  -1.3 & 105.0 &   0.1 &   2.7 \\
+$\hookrightarrow \hookrightarrow$ QIF & 1 & 0 &  -0.8 &   0.2 &   0.2 &  -0.8 \\
 $\hookrightarrow \hookrightarrow$ Random & 0 & & & \\
 $\hookrightarrow \hookrightarrow$ Scheduling & 0 & & & \\
-$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 194 & 74 &  -2.2 &   2.7 &   0.5 &   2.2 \\
-$\hookrightarrow$ Plazar \cite{Plazar2019} & 16 & 12 &  -0.9 &   2.8 &   2.1 &   0.7 \\
-$\hookrightarrow \hookrightarrow$ Blasted Real & 15 & 11 &  -0.9 &   2.7 &   1.8 &   0.7 \\
+$\hookrightarrow$ Soos \cite{soos_2024_10449477} & 149 & 0 &  -2.1 &   0.2 &   0.0 &  -0.1 \\
+$\hookrightarrow$ Plazar \cite{Plazar2019} & 1 & 0 &  -1.2 &   0.1 &   0.1 &  -1.2 \\
+$\hookrightarrow \hookrightarrow$ Blasted Real & 1 & 0 &  -1.2 &   0.1 &   0.1 &  -1.2 \\
 $\hookrightarrow \hookrightarrow$ Feature Models & 0 & & & \\
 $\hookrightarrow \hookrightarrow$ V15 & 0 & & & \\
 $\hookrightarrow \hookrightarrow$ V3 & 0 & & & \\
 $\hookrightarrow \hookrightarrow$ V7 & 0 & & & \\
-$\hookrightarrow \hookrightarrow$ unsorted & 1 & 1 &   0.7 &   5.5 &   5.5 &   0.7 \\
-$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 4 & 4 &   0.0 &   5.6 &   6.6 &   0.9 \\
+$\hookrightarrow \hookrightarrow$ unsorted & 0 & & & \\
+$\hookrightarrow$ Sundermann \cite{SBK+:SPLC24} & 1 & 0 &  -0.3 &   0.5 &   0.5 &  -0.3 \\
             \end{tabular}
             \caption{\capkc vs Approxmc7.
 	}
