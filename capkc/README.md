@@ -55,6 +55,7 @@ cd ..
 cd D4/d4
 make clean
 make -j
+cp d4 "$HOME/.local/bin/d4"
 cd ../..
 
 cd D4/wrapper
