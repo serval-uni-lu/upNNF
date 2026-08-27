@@ -64,15 +64,21 @@ make -j
 cd ../..
 ```
 
+In this example, we install the `d4` executable at `$HOME/.local/bin/d4`.
+To modify this, the path needs to be given to the `gen` exectuable in the `capkc` folder when generating the `build.ninja` file and the `d4` executable needs to be moved to the appropriate path.
+
 Given that compilation can require large amounts of memory, an apptainer script
 is proposed in the `D4` directory. The container will limit `D4` to 64 GB of memory and
-five hours of computation.
+five hours of computation by using the program available at `D4/wrapper`.
 
 ```
 apptainer build --fakeroot d4.sif d4.def
 ```
 
 The resulting container (`d4.sif`) can be used just like the native executable.
+
+The `D4` folder also contains an additional modified version of `D4`, namely `d4d` which has an additional parameter to limit the depth of the compilation.
+If the option `-max-depth` is set to the value `n`, then `d4` will stop the compilation of the sub-graph if it has encountered `n` disjunction nodes along the current branch and replace the sub-graph by a `TRUE` node. Therefore, the constructed d-DNNF is an upper bound of the input formula but is built very differently than with `capkc`.
 
 ### Example Usage
 
@@ -81,4 +87,146 @@ We begin by calling the search algorithm:
 
 ```
 ./capkc/build/capkc --cnf t.cnf
+d4 -dDNNF t.cnf.up -out=t.cnf.unnf
 ```
+
+To use the approximate model counting algorithm with 10000 samples, you may then run:
+```
+./capkc/build/appmc --cnf t.cnf --nb 10000
+```
+
+In this case it returned the following:
+```
+c Initializing
+c Using unnf
+N,nbs,Y,Yl,Yh
+10000, 10000, 26256, 26238.6, 26256
+```
+
+This means that the algorithm did `10000` tries (columnd `N`) and had `10000` successes (column `nbs`).
+The estimate is `26256` (columnd `Y`) and the lower and upper bounds are `26238.6` (column `Yl`) and 26256 (column `Yh`) respectively.
+
+Similarily, to use the sampler we use:
+```
+./capkc/build/sampler --cnf t.cnf --n 2 --print-samples
+```
+
+To generate the samples and print them to the screen.
+Samples are the only lines that don't start with a `c` and are therefore easy to separate from the remaining output.
+
+> [!NOTE]
+> The sampler and approximate model counting algorithm get called with the original path to the cnf file (for example `t.cnf`) but expect the files `t.cnf.smp` and `t.cnf.unnf` to exist. The file `t.cnf.smp` is just the same formula as `t.cnf` but with BCP applied which can be done with `capkc/build/smp` but it can also be the same file as the original. `t.cnf.unnf` is expected to be a d-DNNF generated with the version of `D4` shipped in this repository as it has been modified to output the constrained and unconstrained variables on each edge. With these files provided, the sampler or approximate model counters do not care how the files have been generated. Therefore if compiling `t.cnf` directly to d-DNNF works, then the sampler can be used as a uniform random sampler just like `KUS`, provided the file names are correct.
+
+
+> [!NOTE]
+> To use a different knowledge compiler than the one shipped in this repository, please make sure that the file format is the same and that the new compiler also outputs the unconstrained variables on the d-DNNF edges.
+
+# Additional programs
+
+## Up
+
+`capkc` also contains a program called `up` which we used to remove clauses to simple formulae to perform the uniformity tests with `capkc/build/sampler`.
+
+To remove the last `25` clauses according to the community clause ordering, you may run:
+```
+./capkc/build/up --cnf t.cnf --n 25
+d4 -dDNNF t.cnf.up -out=t.cnf.unnf
+```
+
+Similarily to `capkc`, there are two other possible clause ordering that can be set with `--ordering`: `ascending` and `random`.
+The `ascending` ordering orders the clauses by ascending literal count. Therefore, using this option would remove the `25` clauses with the most literals.
+The default is the `community` ordering
+
+Compilation is then done just like with `capkc`.
+
+Approximate counting:
+```
+./capkc/build/appmc --cnf t.cnf --nb 10000
+```
+
+We then obtain:
+```
+c Initializing
+c Using unnf
+N,nbs,Y,Yl,Yh
+10000, 155, 27776, 22622.5, 34080.8
+```
+
+Or uniform random sampling:
+```
+./capkc/build/sampler --cnf t.cnf --n 2 --print-samples
+```
+
+Both work the same between `capkc` and `up`. This shows that `appmc` and `sampler` can be used outside of the `capkc` framework, provided the expected files are present and have the adequate data and format.
+
+# DNF
+
+The `dnf` folder additionally contains a cube generator.
+Basically, it generate a partial `DNF` with a heuristic.
+The idea is that we can combine the upper bound returned by `up` or `capkc` (which are built from the bottom up) with cubes that target clauses that have been excluded by the compilation process in a top-down approach and build a tighter d-DNNF by using the `divkc` principle.
+In this case however, we wish to avoid the issue where the projected formula had too many solutions, therefore, partial DNF compilation allows us to top the process at any time.
+The program starts with one empty cubes and iteratively uses shannon decomposition to split the cube that satisfies the fewest clauses of the input formula with a focus on the ones that are not present in `t.cnf.up` or `t.cnf.unnf`.
+
+Example usage:
+```
+./capkc/build/up --cnf t.cnf --n 25
+d4 -dDNNF t.cnf.up -out=t.cnf.unnf
+```
+
+This generates a d-DNNF with `1792000` solutions. The idea is now to use cube generation to further reduce the number of solutions in a predicatble way. In this example we will use 10 cubes.
+```
+./dnf/build/dnf --cnf t.cnf --n 10
+```
+This generates a `t.cnf.cubes` file which can then be used with the sampler and approximate model counter as follows:
+
+```
+./capkc/build/appmc --cnf t.cnf --nb 10000 --cubes
+```
+
+```
+c Initializing
+c Using cubes
+N,nbs,Y,Yl,Yh
+10000, 1676, 26672.5, 25176.6, 28238.6
+```
+
+For comparison, the same command without cubes:
+```
+./capkc/build/appmc --cnf t.cnf --nb 10000
+c Initializing
+c Using unnf
+N,nbs,Y,Yl,Yh
+10000, 164, 29388.8, 24074.7, 35852.1
+```
+
+We can immediately see that the number of successes jumped from `164` to `1676` when using cubes.
+
+Similarily for sampling:
+
+```
+./capkc/build/sampler --cnf t.cnf --n 2 
+
+c Initializing
+c Using unnf
+c Sampling
+c UMC 1792000
+c nb_tries 108
+c nb_success 2
+c AMC 33185.2
+```
+
+Witout cubes, we see that `t.cnf.unnf` has `1792000` models and that the sampler tried `108` different solutions to find `2` solutions to `t.cnf`.
+
+```
+./capkc/build/sampler --cnf t.cnf --n 2 --cubes
+
+c Initializing
+c Using cubes
+c Sampling
+c UMC 159144
+c nb_tries 15
+c nb_success 2
+c AMC 21219.2
+```
+
+With cubes, the upper bound (built with the `divkc` theorems) has `159144` (about `11` times less for only `10` cubes) and the number of tries by the sampler plummeted from `108` to `15` with the usage of cubes.
