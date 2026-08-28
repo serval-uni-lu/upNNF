@@ -13,7 +13,7 @@
 #include <map>
 #include <cmath>
 
-std::pmr::unsynchronized_pool_resource MEM_POOL;
+std::pmr::unsynchronized_pool_resource Edge::MEM_POOL;
 
 NNF::NNF(std::string const& path) {
     std::set<Variable> pvar;

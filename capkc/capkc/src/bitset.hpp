@@ -9,6 +9,9 @@ struct BitSetTraits {
     static T from_size_t(std::size_t const idx);
 };
 
+/**
+  * \brief Basic bitset implementation with insert and erase functions
+  */
 template<typename T>
 class BitSet {
 private:
@@ -32,6 +35,9 @@ public:
         }
     }
 
+    /**
+      * \returns True if the set contains element e
+      */
     bool contains(T const& e) const {
         std::size_t p = BitSetTraits<T>::to_size_t(e);
 
@@ -39,12 +45,15 @@ public:
     }
 
     /**
-      * @returns The number of bits in this bitset that are set to true.
+      * \returns The number of bits in this bitset that are set to true.
       */
     inline std::size_t size() const {
         return set.count();
     }
 
+    /**
+      * \brief computes thie intersection of *this and b and stores the result in *this
+      */
     void intersect(BitSet & b) {
         //if(set.size() > b.set.size()) {
         //    set.resize(b.set.size());
@@ -55,10 +64,16 @@ public:
         set &= b.set;
     }
 
+    /**
+      * \returns True if the set is empty
+      */
     bool empty() const {
         return set.none();
     }
 
+    /**
+      * \brief clears the set
+      */
     void clear() {
         set.reset();
     }
@@ -88,14 +103,23 @@ public:
             }
     };
 
+    /**
+      * \brief returns an iterator at the beginning of the set intended for for loops or for each loops
+      */
     Iterator begin() const {
         return Iterator(set, set.find_first());
     }
 
+    /**
+      * \brief returns a past the end iterator of the set intended for for loops or for each loops
+      */
     Iterator end() const {
         return Iterator(set, boost::dynamic_bitset<>::npos);
     }
 
+    /**
+      * \returns True if both sets contains the same elements
+      */
     friend bool equals(BitSet<T> & a, BitSet<T> & b) {
         std::size_t const sz = std::max(a.set.size(), b.set.size());
 
@@ -106,6 +130,11 @@ public:
     }
 };
 
+/**
+  * \brief A basic struct to allow for the storage of std::size_t elements in the BitSet
+  * \details Any element that needs to be stored in the bitset needs to have such a struct definition
+  * with fintions that transform the element to and from std::size_t IDs
+  */
 template <>
 struct BitSetTraits<std::size_t> {
     static std::size_t to_size_t(std::size_t const& v) {
