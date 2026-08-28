@@ -254,3 +254,63 @@ c AMC 21219.2
 ```
 
 With cubes, the upper bound (built with the `divkc` theorems) has `159144` (about `11` times less for only `10` cubes) and the number of tries by the sampler plummeted from `108` to `15` with the usage of cubes.
+
+# Docker
+
+A Dockerfile is also provided.
+The image can be build with `docker build -t capkc .`.
+The executable files are then available in `/capkc` on the container.
+To compile a formula `t.cnf` by using the docker container you can either use the provided
+`docker_compile_formula.sh` bash script or you can run the individual commands
+manually to retain more control over the program options:
+
+```
+docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
+    /capkc/capkc --cnf "t.cnf"
+
+docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
+    /capkc/wrap 16000 3600 \
+    /capkc/d4 -dDNNF "t.cnf.up" -out="t.cnf.unnf"
+```
+
+Notice that we used the wrapper in the docker image to compile the formula to d-DNNF
+with `D4`.
+The wrapper is used as follows:
+```
+wrap <max memory in MB> <max time in seconds> path-to-executable executable-options
+```
+Therefore, we in this example, we limit `D4` to 16000 MB of memory and 3600 seconds of
+computation. The advantage of using the wrapper is that it outputs a line
+such as
+```
+/capkc/d4 -dDNNF t.cnf.up -out=t.cnf.unnf, done, 575762, 0.0247213
+```
+which are directly used in the raw `csv` files of our result folder.
+The output is as follows: `command, status, memory in KB, time in seconds`.
+The status can be `done` in case of success or `err` for errors and
+`timeout` or `mem` for timeouts or out of memory early terminations.
+
+Once the compilation has been done, we can perform approximate model counting as follows:
+```
+docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
+    /capkc/appmc --cnf t.cnf
+```
+
+Similarily, we can perform random sampling with `/capkc/sampler`:
+```
+docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
+    /capkc/sampler --cnf t.cnf --n 2 --print-samples
+```
+
+Cube generation is also available in the docker image with `/capkc/dnf`:
+```
+docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
+    /capkc/dnf --cnf t.cnf --n 10
+```
+
+As well as `up`:
+```
+docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
+    /capkc/up --cnf t.cnf --n 25
+```
+

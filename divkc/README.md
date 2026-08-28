@@ -161,6 +161,10 @@ To compile a formula `t.cnf` by using the docker container you can either use th
 manually to retain more control over the program options:
 
 A prebuilt image is available on [Zenodo](https://doi.org/10.5281/zenodo.18097437).
+The prebuilt image can be loaded with
+```
+docker load -i divkc_docker_image.tar.gz
+```
 
 ```
 docker run --rm -v "$(pwd):/work:Z" -w "/work" divkc \
