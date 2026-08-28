@@ -167,6 +167,23 @@ The idea is that we can combine the upper bound returned by `up` or `capkc` (whi
 In this case however, we wish to avoid the issue where the projected formula had too many solutions, therefore, partial DNF compilation allows us to top the process at any time.
 The program starts with one empty cubes and iteratively uses shannon decomposition to split the cube that satisfies the fewest clauses of the input formula with a focus on the ones that are not present in `t.cnf.up` or `t.cnf.unnf`.
 
+## Build
+
+```
+cd dnf
+cd dependencies/cadical-rel-2.1.3
+./configure
+make -j
+cd ../../
+
+g++ gen.cpp -o gen
+./gen
+ninja
+cd ..
+```
+
+## Usage
+
 Example usage:
 ```
 ./capkc/build/up --cnf t.cnf --n 25
@@ -193,6 +210,9 @@ N,nbs,Y,Yl,Yh
 For comparison, the same command without cubes:
 ```
 ./capkc/build/appmc --cnf t.cnf --nb 10000
+```
+
+```
 c Initializing
 c Using unnf
 N,nbs,Y,Yl,Yh
@@ -205,7 +225,9 @@ Similarily for sampling:
 
 ```
 ./capkc/build/sampler --cnf t.cnf --n 2 
+```
 
+```
 c Initializing
 c Using unnf
 c Sampling
@@ -219,7 +241,9 @@ Witout cubes, we see that `t.cnf.unnf` has `1792000` models and that the sampler
 
 ```
 ./capkc/build/sampler --cnf t.cnf --n 2 --cubes
+```
 
+```
 c Initializing
 c Using cubes
 c Sampling
