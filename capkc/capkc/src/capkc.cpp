@@ -15,6 +15,17 @@
 
 namespace po = boost::program_options;
 
+/**
+  * \brief does one level/iteration of the capkc n-ary search algorithm
+  * \param cnf_path the path to the original CNF file
+  * \param cnf the original CNF formula
+  * \param clids the clause IDs ordered according to the chosen ordering and limited to only active clauses
+  * \param low the index (in clids) of the prefix formula that is assumed to compile with D4
+  * \param high the index (in clids) of the prefix formula that is assumed not to compile with D4
+  * \param N the number of parallel tries to do
+  * \param mem the maximum amount of memory in MB for each individual try
+  * \param time the maximum amount of time in seconds for each individual try
+  */
 RunRes test(std::string const& cnf_path, CNF & cnf, std::vector<std::size_t> const& clids, std::size_t & low, std::size_t & high, std::size_t const& N, std::size_t const& mem, std::size_t const& time) {
     std::cout << cnf_path << ":\n";
     std::cout << "    " << low << " -> " << high << "\n";

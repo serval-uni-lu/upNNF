@@ -58,6 +58,9 @@ po::options_description get_program_options() {
 }
 
 
+/**
+  * \brief computes the set intersection of a and b and stores it in a
+  */
 template<typename T>
 void set_intersection(std::unordered_set<T> & a, std::unordered_set<T> const& b) {
     for(auto it = a.begin(); it != a.end(); ) {
