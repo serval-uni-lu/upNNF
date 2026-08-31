@@ -6,6 +6,7 @@ python3 lv2b.py ignore_25c/*
 ```
 
 Generates:
+```
 File                                          |  #F |     HMP | #Fails | #Bonferroni | Time (h)
 ignore_25c/omega_birthday_b1000_c10_mc.csv    | 144 | 0.074 + |      3 |           0 |   40.552
 ignore_25c/omega_freq_nb_var_b1000_c10_mc.csv |  74 | 0.069 + |      1 |           0 |   30.854
@@ -17,3 +18,4 @@ ignore_25c/omega_modbit_q32_b1000_c10_mc.csv  | 179 | 0.113 + |      3 |        
 ignore_25c/omega_modbit_q4_b1000_c10_mc.csv   | 181 | 0.219 + |      0 |           0 |    9.047
 ignore_25c/omega_modbit_q64_b1000_c10_mc.csv  | 121 | 0.108 + |      1 |           0 |   37.265
 ignore_25c/omega_modbit_q8_b1000_c10_mc.csv   | 181 | 0.111 + |      4 |           0 |    9.419
+```
