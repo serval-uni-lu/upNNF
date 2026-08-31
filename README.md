@@ -9,3 +9,4 @@ Both approaches are available in their respective folders.
 
 The `results` folder contains the raw `csv` files used to generate the tables of the paper, `pdf` files of the tables and the scripts used to generate the tables of the paper.
 The folder also contains more detailed tables than available in the paper.
+The folder separates the `compilation` and approxmiate model counting results from the `uniformity` results in two separate subfolders.
