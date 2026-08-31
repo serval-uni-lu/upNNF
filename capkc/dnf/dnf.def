@@ -1,0 +1,32 @@
+BootStrap: docker
+From: debian:bookworm-slim
+
+%files
+    ./src /dnf/src
+    ./test /dnf/test
+    ./gen.cpp /dnf/gen.cpp
+    ./dependencies /dnf/dependencies
+
+%post
+    echo "setup start"
+
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get -y update
+    apt-get -y install tzdata
+    apt-get -y install g++ make zlib1g-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-dev ninja-build libboost-program-options-dev
+
+    cd /dnf/dependencies/cadical-rel-2.1.3
+    ./configure
+    make -j
+    cd ../../
+
+    cd /dnf
+    g++ gen.cpp -o gen
+    ./gen
+    ninja
+
+    chmod 755 /dnf/build/dnf
+
+%runscript
+    /dnf/build/dnf "$@"

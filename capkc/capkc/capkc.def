@@ -22,7 +22,7 @@ From: debian:bookworm-slim
     mkdir build
     cd build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-    make -j8
+    make -j4
 
     cd /wrapper
     make clean

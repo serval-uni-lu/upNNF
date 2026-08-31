@@ -43,7 +43,7 @@ rm -rf build
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON ..
-make -j4
+make -j4                  # Reduce this number if you run out of memory here
 cd ../../../
 
 g++ gen.cpp -o gen
@@ -63,6 +63,10 @@ make clean
 make -j
 cd ../..
 ```
+
+> [!Note]
+> Building networkit can use a significant amount of memory. Reducing the number of processes
+> by modifying the line `make -j4` and can drastically reduce memroy usage.
 
 In this example, we install the `d4` executable at `$HOME/.local/bin/d4`.
 To modify this, the path needs to be given to the `gen` exectuable in the `capkc` folder when generating the `build.ninja` file and the `d4` executable needs to be moved to the appropriate path.
@@ -190,10 +194,12 @@ Example usage:
 d4 -dDNNF t.cnf.up -out=t.cnf.unnf
 ```
 
-This generates a d-DNNF with `1792000` solutions. The idea is now to use cube generation to further reduce the number of solutions in a predicatble way. In this example we will use 10 cubes.
+This generates a d-DNNF with `1792000` solutions. The idea is now to use cube generation to further reduce the number of solutions in a predicatble way. In this example we will use at most 10 cubes.
 ```
 ./dnf/build/dnf --cnf t.cnf --n 10
 ```
+The command generates at most 10 cubes because the program will terminate early (and write the computed cubes as they are) if either the timeout is reached (`--timeout`) or if the clauses in `t.cnf.ign` (i.e., the clause not in `t.cnf.up` and `t.cnf.unnf` or G_U) are all satisfied by each cube, in which case we can use the DivKC theorems to get an exact d-DNNF instead of an upper bound.
+
 This generates a `t.cnf.cubes` file which can then be used with the sampler and approximate model counter as follows:
 
 ```
@@ -314,3 +320,42 @@ docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
     /capkc/up --cnf t.cnf --n 25
 ```
 
+# Apptainer
+
+Apptainer container scripts are also provided, to build them, please use:
+```
+cd capkc
+apptainer build --fakeroot appmc.sif appmc.def
+apptainer build --fakeroot capkc.sif capkc.def
+apptainer build --fakeroot sampler.sif sampler.def
+apptainer build --fakeroot smp.sif smp.def
+apptainer build --fakeroot up.sif up.def
+cd ../
+
+cd dnf
+apptainer build --fakeroot dnf.sif dnf.def
+cd ../
+
+cd D4
+apptainer build --fakeroot d4.sif d4.def
+cd ../
+```
+
+The `*.sif` files can then be used like normal executables:
+```
+./capkc/capkc.sif --cnf t.cnf
+./D4/d4.sif -dDNNF t.cnf.up -out=t.cnf.unnf
+./capkc/sampler.sif --cnf t.cnf --n 2 
+./capkc/appmc.sif --cnf t.cnf --nb 10000
+
+./capkc/up.sif --cnf t.cnf --n 25
+./D4/d4.sif -dDNNF t.cnf.up -out=t.cnf.unnf
+./dnf/dnf.sif --cnf t.cnf --n 10
+./capkc/sampler.sif --cnf t.cnf --n 2 --cubes
+./capkc/appmc.sif --cnf t.cnf --nb 10000 --cubes
+```
+
+> [!Note]
+> It is possible that the `capkc` compilations are either too slow or run out of memory.
+> Adjusting the number of processes used to compile networkit (line 25 in `capkc.def`: `make -j 4`, similar line numbers for the other files in the `capkc` folder)
+> by reducing the number of processes can help with memory isses (and will make compilation slower).

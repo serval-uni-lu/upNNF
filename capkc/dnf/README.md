@@ -1,3 +1,10 @@
+Dependencies:
+
+```
+apt-get -y install g++ make zlib1g-dev libgmp-dev libgmpxx4ldbl libboost-random-dev libboost-dev ninja-build libboost-program-options-dev
+```
+
+
 build:
 
 ```
