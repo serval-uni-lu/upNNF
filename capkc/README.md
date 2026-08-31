@@ -322,6 +322,8 @@ docker run --rm -v "$(pwd):/work:Z" -w "/work" capkc \
 
 # Apptainer
 
+More information on apptainer can be obtained on the [apptainer website](https://apptainer.org/).
+
 Apptainer container scripts are also provided, to build them, please use:
 ```
 cd capkc
