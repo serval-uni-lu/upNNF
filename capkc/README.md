@@ -91,7 +91,7 @@ Because the constructed d-DNNF is an upper bound, it is compatible with the `cap
 ### Example Usage
 
 Suppose we would like to compile a formula named `t.cnf`.
-We begin by calling the search algorithm:
+We begin by calling the search algorithm and then compiling the upper bound `t.cnf.up` to the d-DNNF named `t.cnf.unnf` (the name here is important as `<base cnf>.unnf` is the expected path to find the d-DNNF for the `capkc` sampling and approximate model counting implementations):
 
 ```
 ./capkc/build/capkc --cnf t.cnf
