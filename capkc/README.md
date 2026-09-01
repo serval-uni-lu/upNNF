@@ -277,7 +277,7 @@ The image can be build with
 ```
 docker build -t capkc .
 ```
-The executable files are then available in `/capkc` on the container.
+The executable files are then available in the `/capkc` folder inside the container.
 To compile a formula `t.cnf` by using the docker container you can either use the provided
 `docker_compile_formula.sh` bash script or you can run the individual commands
 manually to retain more control over the program options:
@@ -297,7 +297,7 @@ The wrapper is used as follows:
 ```
 wrap <max memory in MB> <max time in seconds> path-to-executable executable-options
 ```
-Therefore, we in this example, we limit `D4` to 16000 MB of memory and 3600 seconds of
+Therefore, in this example, we limit `D4` to 16000 MB of memory and 3600 seconds of
 computation. The advantage of using the wrapper is that it outputs a line
 such as
 ```
@@ -306,7 +306,7 @@ such as
 which are directly used in the raw `csv` files of our result folder.
 The output is as follows: `command, status, memory in KB, time in seconds`.
 The status can be `done` in case of success or `err` for errors and
-`timeout` or `mem` for timeouts or out of memory early terminations.
+`timeout` or `mem` for timeouts or out of memory early terminations respectively.
 
 Once the compilation has been done, we can perform approximate model counting as follows:
 ```
@@ -370,6 +370,6 @@ The `*.sif` files can then be used like normal executables:
 ```
 
 > [!Note]
-> It is possible that the `capkc` compilations are either too slow or run out of memory.
+> It is possible that compiling the `capkc` containers is either too slow or runs out of memory.
 > Adjusting the number of processes used to compile networkit (line 25 in `capkc.def`: `make -j 4`, similar line numbers for the other files in the `capkc` folder)
-> by reducing the number of processes can help with memory isses (and will make compilation slower).
+> by reducing the number of processes can help with memory issues (and will make compilation slower).
