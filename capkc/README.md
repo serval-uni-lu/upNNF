@@ -74,6 +74,7 @@ To modify this, the path needs to be given to the `gen` exectuable in the `capkc
 Given that compilation can require large amounts of memory, an apptainer script
 is proposed in the `D4` directory. The container will limit `D4` to 64 GB of memory and
 five hours of computation by using the program available at `D4/wrapper`.
+To build it, please run the following command in the `D4` directory.
 
 ```
 apptainer build --fakeroot d4.sif d4.def
