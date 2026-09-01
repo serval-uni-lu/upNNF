@@ -111,6 +111,7 @@ N,nbs,Y,Yl,Yh
 10000, 10000, 26256, 26238.6, 26256
 ```
 
+The first two line are logging and the last two lines are CSV output.
 This means that the algorithm did `10000` tries (columnd `N`) and had `10000` successes (column `nbs`).
 The estimate is `26256` (columnd `Y`) and the lower and upper bounds are `26238.6` (column `Yl`) and 26256 (column `Yh`) respectively.
 
@@ -127,15 +128,15 @@ Samples are the only lines that don't start with a `c` and are therefore easy to
 
 
 > [!NOTE]
-> To use a different knowledge compiler than the one shipped in this repository, please make sure that the file format is the same and that the new compiler also outputs the unconstrained variables on the d-DNNF edges.
+> To use a different knowledge compiler than the one shipped in this repository, please make sure that the file format is the same and that the new compiler also outputs the unconstrained variables on the d-DNNF edges. Moreover, modifications to the `capkc` code will be required.
 
 # Additional programs
 
 ## Up
 
-`capkc` also contains a program called `up` which we used to remove clauses to simple formulae to perform the uniformity tests with `capkc/build/sampler`.
+`capkc` also contains a program called `up` which we used to remove clauses from simple formulae to perform the uniformity tests with `capkc/build/sampler`.
 
-To remove the last `25` clauses according to the community clause ordering, you may run:
+To remove the last `25` clauses according to the community clause ordering and then compile the resulting upper bound to d-DNNF, you may run:
 ```
 ./capkc/build/up --cnf t.cnf --n 25
 d4 -dDNNF t.cnf.up -out=t.cnf.unnf
@@ -171,11 +172,13 @@ Both work the same between `capkc` and `up`. This shows that `appmc` and `sample
 
 The `dnf` folder additionally contains a cube generator.
 Basically, it generate a partial `DNF` with a heuristic.
-The idea is that we can combine the upper bound returned by `up` or `capkc` (which are built from the bottom up) with cubes that target clauses that have been excluded by the compilation process in a top-down approach and build a tighter d-DNNF by using the `divkc` principle.
-In this case however, we wish to avoid the issue where the projected formula had too many solutions, therefore, partial DNF compilation allows us to top the process at any time.
-The program starts with one empty cubes and iteratively uses shannon decomposition to split the cube that satisfies the fewest clauses of the input formula with a focus on the ones that are not present in `t.cnf.up` or `t.cnf.unnf`.
+The idea is that we can combine the upper bound returned by `up` or `capkc` (which are built from the bottom up) with cubes that target clauses that have been excluded by the compilation process in a top-down approach and build a tighter d-DNNF by using the `divkc` theorems.
+In this case however, we wish to avoid the issue where the projected formula had too many solutions, therefore, partial DNF compilation allows us to stop the process at any time.
+The program starts with one empty cubes and iteratively uses shannon decomposition to split the cube that satisfies the fewest clauses of the input formula with a focus on the clauses that are not present in `t.cnf.up` or `t.cnf.unnf`.
 
 ## Build
+
+Please un the followning commands to compile the `dnf` executable:
 
 ```
 cd dnf
@@ -229,7 +232,7 @@ N,nbs,Y,Yl,Yh
 10000, 164, 29388.8, 24074.7, 35852.1
 ```
 
-We can immediately see that the number of successes jumped from `164` (column `nbs`) to `1676` when using cubes.
+We can immediately see that the number of successes jumped from `164` (column `nbs`) to `1676` when using cubes. We thereby demonstrate that the upper bound which uses cubes is much tighter.
 
 Similarily for sampling:
 
