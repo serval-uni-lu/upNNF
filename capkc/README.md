@@ -35,8 +35,7 @@ apt install g++ make zlib1g-dev libboost-dev libgmp-dev libgmpxx4ldbl ninja-buil
 
 ### Building
 
-These commands should build the individual projects. Detailed instructions are
-given in each subdirectory.
+The following commands build the individual projects.
 
 ```
 cd capkc
