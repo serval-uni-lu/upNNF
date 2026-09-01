@@ -23,7 +23,8 @@ the time and memory usage of a given program.
 ## Usage
 
 To use our approach, the `capkc`, and `D4` projects will need to be compiled
-by following the instructions in the respective folders.
+by following the instructions outlined below.
+`D4` also has instructions in its respective folder.
 
 ### Dependencies
 
