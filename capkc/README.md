@@ -68,7 +68,7 @@ cd ../..
 
 > [!Note]
 > Building networkit can use a significant amount of memory. Reducing the number of processes
-> by modifying the line `make -j4` and can drastically reduce memroy usage.
+> by modifying the line `make -j4` can drastically reduce memroy usage.
 
 In this example, we install the `d4` executable at `$HOME/.local/bin/d4`.
 To modify this, the path needs to be given to the `gen` exectuable in the `capkc` folder when generating the `build.ninja` file and the `d4` executable needs to be moved to the appropriate path.
@@ -86,6 +86,7 @@ The resulting container (`d4.sif`) can be used just like the native executable.
 
 The `D4` folder also contains an additional modified version of `D4`, namely `d4d` which has an additional parameter to limit the depth of the compilation.
 If the option `-max-depth` is set to the value `n`, then `d4` will stop the compilation of the sub-graph if it has encountered `n` disjunction nodes along the current branch and replace the sub-graph by a `TRUE` node. Therefore, the constructed d-DNNF is an upper bound of the input formula but is built very differently than with `capkc`.
+Because the constructed d-DNNF is an upper bound, it is compatible with the `capkc` sampling and approximate model counting algorithms.
 
 ### Example Usage
 
