@@ -226,7 +226,7 @@ N,nbs,Y,Yl,Yh
 10000, 164, 29388.8, 24074.7, 35852.1
 ```
 
-We can immediately see that the number of successes jumped from `164` to `1676` when using cubes.
+We can immediately see that the number of successes jumped from `164` (column `nbs`) to `1676` when using cubes.
 
 Similarily for sampling:
 
@@ -244,7 +244,7 @@ c nb_success 2
 c AMC 33185.2
 ```
 
-Witout cubes, we see that `t.cnf.unnf` has `1792000` models and that the sampler tried `108` different solutions to find `2` solutions to `t.cnf`.
+Witout cubes, we see that `t.cnf.unnf` has `1792000` (line `c UMC 1792000`) models and that the sampler tried `108` (line `c nb_tries 108`) different solutions to find `2` (line `c nb_success 2`) solutions to `t.cnf`.
 
 ```
 ./capkc/build/sampler --cnf t.cnf --n 2 --cubes
