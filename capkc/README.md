@@ -15,7 +15,9 @@ It also contains `d4d`, which has an additional parameter which enables
 one to limit the depth of the d-DNNF by counting the disjunction nodes
 (conjunction nodes are not counted as depth).
 
-Finally, the folder contains `wrapper`, which is used to limit as well as measure
+## Wrapper
+
+The folder `D4/wrapper` contains our wrapper, which is used to limit as well as measure
 the time and memory usage of a given program.
 
 ## Usage
