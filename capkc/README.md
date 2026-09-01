@@ -195,7 +195,7 @@ Example usage:
 d4 -dDNNF t.cnf.up -out=t.cnf.unnf
 ```
 
-This generates a d-DNNF with `1792000` solutions. The idea is now to use cube generation to further reduce the number of solutions in a predicatble way. In this example we will use at most 10 cubes.
+In our example, this generates a d-DNNF with `1792000` solutions. The idea is now to use cube generation to further reduce the number of solutions in a predicatble way. In this example we will use at most 10 cubes.
 ```
 ./dnf/build/dnf --cnf t.cnf --n 10
 ```
